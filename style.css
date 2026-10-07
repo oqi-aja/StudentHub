@@ -630,10 +630,10 @@ body.catatan-modal-open { overflow:hidden; }
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:.5rem;
+  flex-wrap:wrap;
+  gap:.25rem;
   padding:.35rem .75rem;
   border-top:1px solid var(--border);
-  overflow-x:auto;
 }
 .note-toolbar-group { display:flex; align-items:center; gap:.25rem; flex:none; }
 .note-editor-toolbar .icon-btn {

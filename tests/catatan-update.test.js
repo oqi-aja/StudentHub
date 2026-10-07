@@ -42,8 +42,8 @@ assert.strictEqual(api.listNotes()[0].color, "blue");
 
 assert.ok(api.updateNote(made.id, { isArchived: true }).ok, "arsip harus berhasil");
 assert.strictEqual(api.listNotes()[0].isArchived, true);
-assert.ok(api.updateNote(made.id, { isTrashed: true }).ok, "sampah harus berhasil");
-assert.strictEqual(api.listNotes()[0].isTrashed, true);
+assert.ok(api.updateNote(made.id, { isDeleted: true }).ok, "sampah harus berhasil");
+assert.strictEqual(api.listNotes()[0].isDeleted, true);
 
 assert.ok(api.updateNote(made.id, { labels: ["kuliah"] }).ok, "label harus berhasil");
 assert.deepStrictEqual(api.listNotes()[0].labels, ["kuliah"]);

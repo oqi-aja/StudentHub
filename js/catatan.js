@@ -122,9 +122,14 @@ function updateNote(id, input) {
   const res = validateNote(mergedForValidation);
   if (!res.ok) return res;
 
-  const nextArchived = input.isArchived !== undefined ? Boolean(input.isArchived) : Boolean(prev.isArchived);
-  const nextDeleted = input.isDeleted !== undefined ? Boolean(input.isDeleted)
+  const archivedGiven = input.isArchived !== undefined;
+  const deletedGiven = input.isDeleted !== undefined || input.isTrashed !== undefined;
+  let nextArchived = archivedGiven ? Boolean(input.isArchived) : Boolean(prev.isArchived);
+  let nextDeleted = input.isDeleted !== undefined ? Boolean(input.isDeleted)
     : input.isTrashed !== undefined ? Boolean(input.isTrashed) : Boolean(prev.isDeleted);
+  // Arsip dan sampah saling eksklusif: flag yang diubah eksplisit menang.
+  if (archivedGiven && !deletedGiven && nextArchived) nextDeleted = false;
+  if (deletedGiven && !archivedGiven && nextDeleted) nextArchived = false;
 
   notes[idx] = {
     ...prev,
@@ -133,9 +138,8 @@ function updateNote(id, input) {
     labels: Array.isArray(input.labels) ? input.labels : (prev.labels || []),
     collaborators: Array.isArray(input.collaborators) ? input.collaborators : (prev.collaborators || []),
     isPinned: input.isPinned !== undefined ? Boolean(input.isPinned) : prev.isPinned,
-    // Arsip dan sampah saling eksklusif.
-    isArchived: nextDeleted ? false : nextArchived,
-    isDeleted: nextArchived ? false : nextDeleted,
+    isArchived: nextArchived,
+    isDeleted: nextDeleted,
     reminder: input.reminder !== undefined ? input.reminder : prev.reminder,
     updated_at: Date.now()
   };
@@ -261,6 +265,7 @@ const FORMAT_MARKERS = {
 
 
 let catatanDocClickHandler = null;
+let catatanKeyHandler = null;
 
 function initCatatanPage() {
   const root = document.getElementById('page-catatan');
@@ -1072,12 +1077,58 @@ function initCatatanPage() {
   root.querySelectorAll('[data-action="toggle-view"]').forEach(b => b.onclick = () => { state.layout = (state.layout === 'grid' ? 'list' : 'grid'); if (els.shell) els.shell.dataset.layout = state.layout; });
   root.querySelectorAll('[data-action="refresh"]').forEach(b => b.onclick = () => render());
 
-  // --- Editor: kembali menyimpan ---
-  root.querySelectorAll('[data-back]').forEach(b => b.onclick = closeEditor);
+  // --- Editor: tutup (draft disimpan dulu) ---
+  root.querySelectorAll('[data-back]').forEach(b => b.onclick = () => closeEditor());
+  if (els.editor.backdrop) els.editor.backdrop.onclick = function () {
+    if (els.editor.noteMenu && !els.editor.noteMenu.hidden) { els.editor.noteMenu.hidden = true; return; }
+    if (els.editor.formatMenu && !els.editor.formatMenu.hidden) { els.editor.formatMenu.hidden = true; return; }
+    hideAllPopovers();
+    closeEditor();
+  };
+  if (els.editor.saveRetry) els.editor.saveRetry.onclick = function () {
+    flushAutosave();
+    saveDraft();
+  };
 
-  // --- Editor: autosave ---
-  if (els.editor.title) els.editor.title.addEventListener('input', scheduleAutosave);
-  if (els.editor.content) els.editor.content.addEventListener('input', scheduleAutosave);
+  // --- Editor: autosave + riwayat + tinggi otomatis ---
+  function onEditorInput() {
+    autosizeContent();
+    scheduleHistoryPush();
+    scheduleAutosave();
+  }
+  if (els.editor.title) els.editor.title.addEventListener('input', onEditorInput);
+  if (els.editor.content) els.editor.content.addEventListener('input', onEditorInput);
+  if (els.editor.undoBtn) els.editor.undoBtn.onclick = undoEditor;
+  if (els.editor.redoBtn) els.editor.redoBtn.onclick = redoEditor;
+
+  // --- Editor: shortcut keyboard ---
+  if (catatanKeyHandler) document.removeEventListener('keydown', catatanKeyHandler);
+  catatanKeyHandler = function (e) {
+    if (e.key === 'Escape') { if (closeTopmost()) e.preventDefault(); return; }
+    const open = els.editor.wrap && !els.editor.wrap.hidden;
+    if (!open) return;
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); if (e.shiftKey) redoEditor(); else undoEditor(); return; }
+    if (mod && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); redoEditor(); return; }
+    if (mod && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); applyFormat('bold'); return; }
+    if (mod && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); applyFormat('italic'); return; }
+    if (mod && e.key === 'Enter') { e.preventDefault(); closeEditor(); }
+  };
+  document.addEventListener('keydown', catatanKeyHandler);
+
+  // --- Editor: format teks ---
+  root.querySelectorAll('[data-action="format-menu"]').forEach(b => b.onclick = (e) => {
+    e.stopPropagation();
+    if (!els.editor.formatMenu) return;
+    const show = els.editor.formatMenu.hidden;
+    closeNoteMenu();
+    hideAllPopovers();
+    els.editor.formatMenu.hidden = !show;
+  });
+  root.querySelectorAll('[data-format]').forEach(b => b.onclick = (e) => {
+    e.stopPropagation();
+    applyFormat(b.dataset.format);
+  });
 
   // --- Editor: pin ---
   if (els.editor.pinBtn) els.editor.pinBtn.onclick = () => {
@@ -1089,18 +1140,31 @@ function initCatatanPage() {
     showSnackbar(state.selectedNote.isPinned ? 'Disematkan.' : 'Semat dilepas.');
   };
 
-  // --- Editor: arsip ---
+  // --- Editor: arsip / pulihkan / hapus permanen ---
   if (els.editor.archiveBtn) els.editor.archiveBtn.onclick = () => {
     if (!state.selectedNote) return;
     const note = state.selectedNote;
     const toggled = !note.isArchived;
-    updateNote(note.id, { isArchived: toggled });
+    const res = updateNote(note.id, { isArchived: toggled, isDeleted: false });
+    if (!res.ok) return showSnackbar(res.error);
     showSnackbar(toggled ? 'Diarsipkan.' : 'Dikeluarkan dari arsip.', () => {
       updateNote(note.id, { isArchived: !toggled });
       render();
     });
-    closeEditor();
+    closeEditor(true);
   };
+  if (els.editor.restoreBtn) els.editor.restoreBtn.onclick = () => {
+    if (!state.selectedNote) return;
+    restoreNote(state.selectedNote);
+    closeEditor(true);
+  };
+  if (els.editor.deleteBtn) els.editor.deleteBtn.onclick = () => {
+    if (state.selectedNote) openDeleteSheet(state.selectedNote);
+  };
+
+  // --- Editor: kolaborator (state lokal, belum ada backend) ---
+  if (els.editor.collaboratorBtn) els.editor.collaboratorBtn.onclick = () => openCollaboratorSheet();
+  if (els.collaboratorSheet) els.collaboratorSheet.querySelectorAll('[data-close]').forEach(b => b.onclick = closeSheets);
 
   // --- Editor: foto ---
   if (els.editor.photoBtn) els.editor.photoBtn.onclick = () => { if (els.editor.file) els.editor.file.click(); };
@@ -1111,7 +1175,7 @@ function initCatatanPage() {
     state.selectedNote.image = data;
     if (els.editor.image) { els.editor.image.src = data; els.editor.image.hidden = false; }
     if (els.editor.removeBtn) els.editor.removeBtn.hidden = false;
-    setStatus('Tersimpan ✓');
+    showEditedTime();
   });
   if (els.editor.removeBtn) els.editor.removeBtn.onclick = () => {
     if (!state.selectedNote) return;
@@ -1119,17 +1183,17 @@ function initCatatanPage() {
     state.selectedNote.image = '';
     if (els.editor.image) { els.editor.image.src = ''; els.editor.image.hidden = true; }
     if (els.editor.removeBtn) els.editor.removeBtn.hidden = true;
-    setStatus('Tersimpan ✓');
+    showEditedTime();
   };
 
   // --- Popover warna ---
   function toggleColorPopover(anchor) {
     if (!els.popoverColor) return;
     if (els.popoverColor.hidden) {
-      const r = anchor.getBoundingClientRect();
-      els.popoverColor.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 240)) + 'px';
-      els.popoverColor.style.top = (r.bottom + 6) + 'px';
-      els.popoverColor.hidden = false;
+      hideAllPopovers();
+      if (els.editor.noteMenu) els.editor.noteMenu.hidden = true;
+      if (els.editor.formatMenu) els.editor.formatMenu.hidden = true;
+      placePopover(els.popoverColor, anchor);
     } else {
       hideColorPopover();
     }
@@ -1144,23 +1208,26 @@ function initCatatanPage() {
       updateNote(state.selectedNote.id, { color: color });
       state.selectedNote.color = color;
       if (els.editor.wrap) els.editor.wrap.dataset.color = color;
-      setStatus('Tersimpan ✓');
+      showEditedTime();
     }
     hideColorPopover();
   });
 
-  // --- Menu editor (⋮): Duplikasi / Hapus ke Sampah / Hapus Permanen ---
+  // --- Menu editor (⋮): Label / Duplikasi / Hapus ke Sampah / Hapus Permanen ---
   root.querySelectorAll('[data-note-menu-btn]').forEach(b => b.onclick = (e) => {
     e.stopPropagation();
-    const m = root.querySelector('[data-note-menu]');
-    if (m) m.hidden = !m.hidden;
+    if (!els.editor.noteMenu) return;
+    const show = els.editor.noteMenu.hidden;
+    if (els.editor.formatMenu) els.editor.formatMenu.hidden = true;
+    hideAllPopovers();
+    els.editor.noteMenu.hidden = !show;
   });
   root.querySelectorAll('[data-note-action]').forEach(b => b.onclick = () => {
     if (!state.selectedNote) return;
     const note = state.selectedNote;
     closeNoteMenu();
     if (b.dataset.action === 'duplicate') duplicateNote(note);
-    else if (b.dataset.action === 'trash') { trashNote(note); closeEditor(); }
+    else if (b.dataset.action === 'trash') { trashNote(note); closeEditor(true); }
     else if (b.dataset.action === 'delete') openDeleteSheet(note);
   });
 
