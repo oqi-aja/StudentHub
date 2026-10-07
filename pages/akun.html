@@ -1,0 +1,85 @@
+<section class="page-section" id="page-akun">
+  <header class="page-header">
+    <h2 class="page-title">Kelola Akun</h2>
+    <p class="page-subtitle">Tambah akun PJ Mata Kuliah atau Mahasiswa</p>
+  </header>
+
+  <div class="kpi-grid">
+    <article class="kpi-card"><span class="kpi-label">Total Akun</span><span class="kpi-value" data-total>0</span></article>
+    <article class="kpi-card"><span class="kpi-label">PJ Mata Kuliah</span><span class="kpi-value" data-pj>0</span></article>
+    <article class="kpi-card"><span class="kpi-label">Mahasiswa</span><span class="kpi-value" data-mhs>0</span></article>
+  </div>
+
+  <div class="card">
+    <header class="card-header">
+      <div>
+        <h3 class="card-title">Daftar Akun</h3>
+        <p class="card-meta">Menampilkan seluruh akun (Username dan Password)</p>
+      </div>
+      <button class="button" type="button" data-open>+ Tambah Akun</button>
+    </header>
+    <div class="card-body">
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Role</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody data-tbody></tbody>
+        </table>
+      </div>
+      <div data-empty class="card-meta" hidden>Belum ada akun.</div>
+    </div>
+  </div>
+
+  <div class="fm-overlay" data-overlay hidden></div>
+
+  <section class="fm-sheet" data-sheet role="dialog" aria-modal="true" aria-labelledby="akun-title" hidden>
+    <header class="fm-sheet-head">
+      <h3 class="fm-sheet-title" id="akun-title">Tambah Akun</h3>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
+    </header>
+    <div class="fm-sheet-body">
+      <form class="form" data-form novalidate>
+        <div class="form-field">
+          <label class="label" for="akun-name">Nama lengkap</label>
+          <input class="input" id="akun-name" name="name" type="text" autocomplete="name">
+        </div>
+        <div class="form-field">
+          <label class="label" for="akun-username">Username</label>
+          <input class="input" id="akun-username" name="username" type="text" autocomplete="off" autocapitalize="none" spellcheck="false">
+        </div>
+        <div class="form-field">
+          <label class="label" for="akun-password">Password</label>
+          <input class="input" id="akun-password" name="password" type="text" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="form-field">
+          <label class="label" for="akun-role">Role</label>
+          <select class="select" id="akun-role" name="role">
+            <option value="">Pilih role</option>
+            <option value="pj">PJ Mata Kuliah</option>
+            <option value="mahasiswa">Mahasiswa</option>
+            <option value="admin">Ketua Kelas</option>
+          </select>
+        </div>
+        <div class="form-field" data-course-wrap hidden>
+          <label class="label" for="akun-course">Mata Kuliah</label>
+          <select class="select" id="akun-course" name="course_id" data-course></select>
+        </div>
+        <input type="hidden" name="id" data-id>
+        <p class="form-error" data-error role="alert"></p>
+      </form>
+    </div>
+    <footer class="fm-sheet-foot">
+      <button class="button button--ghost" type="button" data-cancel>Batal</button>
+      <button class="button" type="button" data-save>Simpan</button>
+    </footer>
+  </section>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+</section>

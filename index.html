@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <h1 class="app-title">StudentHub</h1>
+    </div>
+  </header>
+
+  <main class="app-main" id="app" aria-live="polite">
+    <!-- Konten halaman akan dirender oleh script.js -->
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <a class="nav-item" href="#home" data-page="home" data-roles="admin,student,pj,guest">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a class="nav-item" href="#tugas" data-page="tugas" data-roles="admin,student,pj">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Tugas</span>
+    </a>
+    <a class="nav-item" href="#daftar" data-page="daftar" data-roles="admin,student,pj,guest">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Daftar Tugas</span>
+    </a>
+    <a class="nav-item" href="#informasi" data-page="informasi" data-roles="admin,student,pj,guest">
+      <span class="nav-icon">📢</span>
+      <span class="nav-label">Informasi</span>
+    </a>
+    <a class="nav-item" href="#profil" data-page="profil" data-roles="admin,student,pj">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profil</span>
+    </a>
+  </nav>
+
+  <script src="js/auth.js" defer></script>
+  <script src="js/tugas.js" defer></script>
+  <script src="js/profil.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+  <script src="js/akun.js" defer></script>
+<script src="js/jadwal.js" defer></script>
+  <script src="js/catatan.js" defer></script>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

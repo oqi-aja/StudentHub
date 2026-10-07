@@ -1,0 +1,84 @@
+<section class="page-section" id="page-home">
+  <header class="page-header">
+    <h2 class="page-title" data-greeting>Selamat datang 👋</h2>
+    <p class="page-subtitle">Ringkasan tugas & informasi terbarumu</p>
+  </header>
+
+  <div class="kpi-grid">
+    <article class="kpi-card">
+      <span class="kpi-label">Total Tugas</span>
+      <span class="kpi-value" data-stat="tugas">-</span>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-label">Total File</span>
+      <span class="kpi-value" data-stat="file">-</span>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-label">Total Akun</span>
+      <span class="kpi-value" data-stat="akun">-</span>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-label">Mahasiswa</span>
+      <span class="kpi-value" data-stat="mahasiswa">-</span>
+    </article>
+  </div>
+
+  <div class="grid two">
+    <article class="card">
+      <header class="card-header">
+        <div>
+          <h3 class="card-title">Tugas Terdekat</h3>
+          <p class="card-meta">Deadline terdekat dari daftar tugas</p>
+        </div>
+        <a class="button button--ghost" href="#daftar">Lihat semua</a>
+      </header>
+      <div class="card-body">
+        <div class="list" data-nearest></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <header class="card-header">
+        <div>
+          <h3 class="card-title">Informasi Terbaru</h3>
+          <p class="card-meta">Pengumuman & info penting</p>
+        </div>
+        <a class="button button--ghost" href="#informasi">Lihat semua</a>
+      </header>
+      <div class="card-body">
+        <div class="list" data-news></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="grid two">
+    <a class="card" href="#tugas" data-needs-account>
+      <div class="card-body">
+        <h3 class="card-title">📚 Tugas</h3>
+        <p class="card-meta">Kelola file & folder mata kuliah</p>
+      </div>
+    </a>
+    <a class="card" href="#jadwal" data-needs-account>
+      <div class="card-body">
+        <h3 class="card-title">📅 Jadwal</h3>
+        <p class="card-meta">Lihat jadwal kuliah mingguan</p>
+      </div>
+    </a>
+    <a class="card" href="#catatan" data-needs-account>
+      <div class="card-body">
+        <h3 class="card-title">📝 Catatan</h3>
+        <p class="card-meta">Catatan pribadi untuk belajar</p>
+      </div>
+    </a>
+  </div>
+
+  <article class="card" data-admin-block hidden>
+    <header class="card-header">
+      <div>
+        <h3 class="card-title">Ringkasan Ketua Kelas</h3>
+        <p class="card-meta">Hanya terlihat oleh akun Ketua Kelas</p>
+      </div>
+      <a class="button" href="#akun">Kelola Akun</a>
+    </header>
+  </article>
+</section>

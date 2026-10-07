@@ -1,0 +1,62 @@
+<section class="page-section">
+  <header class="page-header">
+    <h2 class="page-title">Daftar Tugas</h2>
+    <p class="page-subtitle">Semua tugas milikmu</p>
+  </header>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="form">
+        <div class="form-field">
+          <label class="label" for="search-task">Cari tugas</label>
+          <input id="search-task" class="input" type="search" placeholder="Cari judul, mata kuliah, dosen...">
+        </div>
+        <div class="grid two">
+          <div class="form-field">
+            <label class="label" for="filter-status">Status</label>
+            <select id="filter-status" class="select">
+              <option value="">Semua status</option>
+              <option>Belum dikerjakan</option>
+              <option>Sedang dikerjakan</option>
+              <option>Selesai</option>
+              <option>Terlambat</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="label" for="filter-course">Mata kuliah</label>
+            <select id="filter-course" class="select">
+              <option value="">Semua mata kuliah</option>
+              <option>Pemrograman Web</option>
+              <option>Basis Data</option>
+              <option>Jaringan Komputer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="list">
+    <article class="list-item">
+      <div class="list-item-main">
+        <a class="list-item-title" href="#detail-tugas">Membuat Website</a>
+        <span class="list-item-subtitle">Pemrograman Web • Dosen: Pak A • Deadline: 10 Oktober 2026</span>
+      </div>
+      <span class="badge badge--warning">Sedang dikerjakan</span>
+    </article>
+    <article class="list-item">
+      <div class="list-item-main">
+        <a class="list-item-title" href="#detail-tugas">Membuat Database</a>
+        <span class="list-item-subtitle">Basis Data • Dosen: Bu B • Deadline: 15 Oktober 2026</span>
+      </div>
+      <span class="badge">Belum dikerjakan</span>
+    </article>
+    <article class="list-item">
+      <div class="list-item-main">
+        <a class="list-item-title" href="#detail-tugas">Laporan Jaringan</a>
+        <span class="list-item-subtitle">Jaringan Komputer • Dosen: Pak C • Deadline: 20 Oktober 2026</span>
+      </div>
+      <span class="badge badge--success">Selesai</span>
+    </article>
+  </div>
+</section>

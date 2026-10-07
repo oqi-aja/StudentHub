@@ -1,0 +1,11 @@
+# Node / Vite (sudah tidak dipakai, tapi aman disimpan)
+node_modules/
+package-lock.json
+
+# Cloudflare Wrangler
+.wrangler/
+
+# File sementara
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,218 @@
+<section class="page-section" id="page-catatan">
+  <div class="catatan-shell" data-shell data-mode="grid" data-view="catatan" data-layout="grid">
+    <header class="catatan-header">
+      <button class="icon-btn catatan-hamburger" type="button" data-sidebar-toggle aria-label="Menu" title="Menu">☰</button>
+      <div class="catatan-header-brand">
+        <span class="catatan-brand-text">StudentHub / Catatan</span>
+      </div>
+      <div class="catatan-search-wrap">
+        <input class="input catatan-search" type="search" data-search placeholder="Telusuri catatan..." aria-label="Telusuri catatan">
+      </div>
+      <div class="catatan-header-actions">
+        <select class="select select--sm catatan-sort" data-sort aria-label="Urutkan" title="Urutkan">
+          <option value="updated_desc" selected>Terbaru</option>
+          <option value="updated_asc">Terlama</option>
+          <option value="title_asc">Nama A-Z</option>
+          <option value="title_desc">Nama Z-A</option>
+        </select>
+        <button class="icon-btn" type="button" data-action="refresh" aria-label="Segarkan" title="Segarkan">⟳</button>
+        <button class="icon-btn" type="button" data-action="toggle-view" aria-label="Tampilan" title="Ganti tampilan">▦</button>
+        <button class="icon-btn" type="button" data-quick-new aria-label="Catatan baru" title="Catatan baru">＋</button>
+      </div>
+    </header>
+
+    <div class="catatan-body-row">
+      <aside class="catatan-sidebar" data-sidebar>
+        <nav class="catatan-sidebar-nav">
+          <button class="catatan-nav-item is-active" type="button" data-nav="catatan" aria-current="page">
+            <span class="catatan-nav-ico">💡</span>
+            <span class="catatan-nav-text">Catatan</span>
+          </button>
+          <button class="catatan-nav-item" type="button" data-nav="pengingat">
+            <span class="catatan-nav-ico">🔔</span>
+            <span class="catatan-nav-text">Pengingat</span>
+          </button>
+          <button class="catatan-nav-item" type="button" data-nav="label-manage">
+            <span class="catatan-nav-ico">🏷️</span>
+            <span class="catatan-nav-text">Edit label</span>
+          </button>
+          <div class="catatan-nav-labels" data-sidebar-labels-list></div>
+          <button class="catatan-nav-item" type="button" data-nav="arsip">
+            <span class="catatan-nav-ico">📥</span>
+            <span class="catatan-nav-text">Arsip</span>
+          </button>
+          <button class="catatan-nav-item" type="button" data-nav="sampah">
+            <span class="catatan-nav-ico">🗑️</span>
+            <span class="catatan-nav-text">Sampah</span>
+          </button>
+        </nav>
+      </aside>
+
+      <div class="catatan-scrim" data-scrim hidden></div>
+
+      <main class="catatan-main">
+        <div class="catatan-content" data-content>
+          <div class="quick-note" data-quick-note data-color="white">
+            <div class="quick-note-collapsed" data-quick-collapsed>
+              <input class="quick-note-input" type="text" data-quick-placeholder readonly placeholder="Buat catatan...">
+              <div class="quick-note-actions">
+                <button class="icon-btn" type="button" data-quick-photo-btn aria-label="Tambah foto">🖼️</button>
+                <input class="hidden-input" type="file" data-quick-file accept="image/*" hidden>
+              </div>
+            </div>
+            <div class="quick-note-expanded" data-quick-expanded hidden>
+              <div class="quick-title-row">
+                <input class="note-title quick-note-title" type="text" data-quick-title placeholder="Judul" maxlength="120">
+                <button class="icon-btn" type="button" data-quick-pin aria-label="Sematkan">📌</button>
+              </div>
+              <textarea class="note-content quick-note-content" data-quick-content placeholder="Buat catatan..."></textarea>
+              <div class="quick-chips" data-quick-chips hidden></div>
+              <div class="quick-preview-wrap" data-quick-preview-wrap hidden>
+                <img class="quick-preview-img" data-quick-preview alt="">
+                <button class="button button--ghost button--sm" type="button" data-quick-remove-photo>Hapus Foto</button>
+              </div>
+            </div>
+          </div>
+          <div class="catatan-skeleton" data-skeleton hidden>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+
+          <div class="catatan-error-state" data-error-state hidden>
+            <span class="catatan-error-icon">⚠️</span>
+            <p class="catatan-error-text" data-error-state-text>Gagal memuat catatan.</p>
+            <button class="button button--ghost button--sm" type="button" data-action="retry">Coba lagi</button>
+          </div>
+
+          <div class="catatan-empty" data-empty hidden>
+            <div class="catatan-empty-icon" data-empty-icon>💡</div>
+            <div class="catatan-empty-title" data-empty-title>Belum ada catatan</div>
+            <div class="catatan-empty-sub" data-empty-sub>Catatan yang Anda buat akan muncul di sini.</div>
+          </div>
+
+          <div class="catatan-sections" data-sections-wrap>
+            <section class="catatan-section" data-section-pinned hidden>
+              <h4 class="catatan-section-title">DISEMATKAN</h4>
+              <div class="catatan-grid" data-grid-pinned></div>
+            </section>
+            <section class="catatan-section" data-section-others>
+              <h4 class="catatan-section-title" data-title-others hidden>LAINNYA</h4>
+              <div class="catatan-grid" data-grid-others data-grid></div>
+            </section>
+          </div>
+        </div>
+
+        <section class="note-editor" data-note-editor hidden>
+          <header class="note-editor-header">
+            <button class="icon-btn" type="button" data-back aria-label="Kembali" title="Kembali">←</button>
+            <div class="note-editor-meta">
+              <span class="note-status" data-status>Tersimpan</span>
+            </div>
+            <div class="note-editor-actions">
+              <button class="icon-btn" type="button" data-editor-pin title="Sematkan">📌</button>
+              <button class="icon-btn" type="button" data-action="color-popover" data-target="editor" title="Warna">🎨</button>
+              <button class="icon-btn" type="button" data-action="reminder-popover" data-target="editor" title="Pengingat">🔔</button>
+              <button class="icon-btn" type="button" data-action="label-popover" data-target="editor" title="Label">🏷️</button>
+              <button class="icon-btn" type="button" data-editor-archive title="Arsip">📥</button>
+              <div class="catatan-menu-wrap">
+                <button class="icon-btn" type="button" data-note-menu-btn title="Lainnya">⋮</button>
+                <div class="catatan-menu" data-note-menu hidden>
+                  <button class="catatan-menu-item" type="button" data-action="duplicate" data-note-action>Duplikasi</button>
+                  <button class="catatan-menu-item" type="button" data-action="trash" data-note-action>Hapus ke Sampah</button>
+                  <button class="catatan-menu-item" type="button" data-action="delete" data-note-action>Hapus Permanen</button>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="note-editor-body" data-editor-body data-color="white">
+            <input class="note-title" type="text" data-note-title placeholder="Judul" maxlength="120">
+            <textarea class="note-content" data-note-content placeholder="Isi catatan..."></textarea>
+            <div class="editor-chips" data-editor-chips></div>
+            <div class="note-editor-photo">
+              <input type="file" data-note-file accept="image/*" hidden>
+              <img class="catatan-img" data-note-image alt="Foto catatan" hidden>
+              <div class="note-editor-photo-actions">
+                <button class="icon-btn" type="button" data-note-photo title="Tambah foto">🖼️</button>
+                <button class="button button--ghost button--sm" type="button" data-note-remove-photo hidden>Hapus Foto</button>
+              </div>
+            </div>
+            <p class="form-error note-editor-error" data-error role="alert"></p>
+          </div>
+          <footer class="note-editor-footer">
+            <span class="note-status" data-status-bottom>Tersimpan ✓</span>
+            <button class="button button--primary button--sm" type="button" data-back>Selesai</button>
+          </footer>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="catatan-popover" data-popover-color hidden>
+    <div class="color-picker-grid">
+      <button class="color-circle is-selected" type="button" data-color="white" style="background:#ffffff" title="Default"></button>
+      <button class="color-circle" type="button" data-color="red" style="background:#faaff5" title="Merah muda"></button>
+      <button class="color-circle" type="button" data-color="orange" style="background:#fbbc04" title="Oranye"></button>
+      <button class="color-circle" type="button" data-color="yellow" style="background:#fff475" title="Kuning"></button>
+      <button class="color-circle" type="button" data-color="green" style="background:#ccff90" title="Hijau"></button>
+      <button class="color-circle" type="button" data-color="teal" style="background:#a7ffeb" title="Teal"></button>
+      <button class="color-circle" type="button" data-color="blue" style="background:#cbf0f8" title="Biru"></button>
+      <button class="color-circle" type="button" data-color="purple" style="background:#d7aefb" title="Ungu"></button>
+    </div>
+  </div>
+
+  <div class="catatan-popover" data-popover-label hidden>
+    <div class="popover-title">Label catatan</div>
+    <div class="popover-label-list" data-popover-label-list></div>
+    <div class="popover-input-row">
+      <input class="input input--sm" type="text" data-popover-new-label placeholder="Buat label baru...">
+      <button class="button button--ghost button--sm" type="button" data-popover-add-label>+</button>
+    </div>
+  </div>
+
+  <div class="catatan-popover" data-popover-reminder hidden>
+    <div class="popover-title">Setel Pengingat</div>
+    <input class="input input--sm" type="datetime-local" data-popover-reminder-time>
+    <div class="popover-actions">
+      <button class="button button--ghost button--sm" type="button" data-action="clear-reminder">Hapus</button>
+      <button class="button button--primary button--sm" type="button" data-action="save-reminder">Simpan</button>
+    </div>
+  </div>
+
+  <div class="fm-overlay" data-overlay hidden></div>
+
+  <section class="fm-sheet" data-label-sheet role="dialog" aria-modal="true" aria-labelledby="catatan-label-title" hidden>
+    <header class="fm-sheet-head">
+      <h3 class="fm-sheet-title" id="catatan-label-title">Edit Label</h3>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
+    </header>
+    <div class="fm-sheet-body">
+      <div class="popover-input-row">
+        <input class="input" type="text" data-modal-new-label placeholder="Buat label baru...">
+        <button class="button button--primary button--sm" type="button" data-modal-add-label>Tambah</button>
+      </div>
+      <div class="modal-label-manage-list" data-modal-label-list></div>
+    </div>
+    <footer class="fm-sheet-foot">
+      <button class="button button--primary" type="button" data-close>Selesai</button>
+    </footer>
+  </section>
+
+  <section class="fm-sheet" data-delete-sheet role="dialog" aria-modal="true" aria-labelledby="catatan-delete-title" hidden>
+    <header class="fm-sheet-head">
+      <h3 class="fm-sheet-title" id="catatan-delete-title">Hapus Catatan</h3>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
+    </header>
+    <div class="fm-sheet-body">
+      <p class="card-meta">Catatan <strong data-delete-text></strong> akan dihapus permanen dan tidak bisa dikembalikan.</p>
+    </div>
+    <footer class="fm-sheet-foot">
+      <button class="button button--ghost" type="button" data-cancel>Batal</button>
+      <button class="button button--danger" type="button" data-delete-save>Hapus</button>
+    </footer>
+  </section>
+
+  <div class="catatan-snackbar" data-snackbar hidden role="status" aria-live="polite">
+    <span class="catatan-snackbar-text" data-snackbar-text></span>
+    <button class="catatan-snackbar-undo" type="button" data-snackbar-undo hidden>Urungkan</button>
+  </div>
+</section>

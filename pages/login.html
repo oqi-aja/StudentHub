@@ -1,0 +1,78 @@
+<section class="page-section login">
+  <header class="login-intro">
+    <h1 class="login-brand">StudentHub</h1>
+    <p class="login-tagline">Kelola aktivitas kuliah<br>dalam satu tempat</p>
+  </header>
+
+  <div class="login-gates" data-panel="gates">
+    <button class="gate-card" type="button" data-enter="student">
+      <span class="gate-icon" aria-hidden="true">🎓</span>
+      <span class="gate-text">
+        <span class="gate-title">Login Mahasiswa</span>
+      </span>
+      <span class="gate-arrow" aria-hidden="true">→</span>
+    </button>
+
+    <button class="gate-card" type="button" data-enter="admin">
+      <span class="gate-icon" aria-hidden="true">👑</span>
+      <span class="gate-text">
+        <span class="gate-title">Login Ketua Kelas | Admin</span>
+
+      </span>
+      <span class="gate-arrow" aria-hidden="true">→</span>
+    </button>
+
+    <button class="gate-card gate-card--ghost" type="button" data-login-guest>
+      <span class="gate-icon" aria-hidden="true">😐
+</span>
+      <span class="gate-text">
+        <span class="gate-title">Masuk Tanpa Akun</span>
+      </span>
+      <span class="gate-arrow" aria-hidden="true">→</span>
+    </button>
+  </div>
+
+  <form class="form login-form" data-form="student" novalidate hidden>
+    <h2 class="page-title">Login Mahasiswa</h2>
+
+    <div class="form-field">
+      <label class="label" for="login-student-username">Username</label>
+      <input class="input" id="login-student-username" name="username" type="text"
+             autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="budi">
+    </div>
+
+    <div class="form-field">
+      <label class="label" for="login-student-password">Password</label>
+      <input class="input" id="login-student-password" name="password" type="password"
+             autocomplete="current-password" placeholder="••••••">
+    </div>
+
+    <p class="form-error" data-error role="alert"></p>
+
+    <button class="button" type="submit">Login</button>
+    <button class="button button--ghost" type="button" data-login-back>← Kembali</button>
+    <p class="login-hint">Akun mockup: <code>budi</code> / <code>budi123</code> · <code>andi</code> / <code>andi123</code></p>
+  </form>
+
+  <form class="form login-form" data-form="admin" novalidate hidden>
+    <h2 class="page-title">Login Ketua Kelas</h2>
+
+    <div class="form-field">
+      <label class="label" for="login-admin-username">Username</label>
+      <input class="input" id="login-admin-username" name="username" type="text"
+             autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="admin">
+    </div>
+
+    <div class="form-field">
+      <label class="label" for="login-admin-password">Password</label>
+      <input class="input" id="login-admin-password" name="password" type="password"
+             autocomplete="current-password" placeholder="••••••">
+    </div>
+
+    <p class="form-error" data-error role="alert"></p>
+
+    <button class="button" type="submit">Login</button>
+    <button class="button button--ghost" type="button" data-login-back>← Kembali</button>
+    <p class="login-hint">Akun mockup: <code>admin</code> / <code>admin123</code></p>
+  </form>
+</section>

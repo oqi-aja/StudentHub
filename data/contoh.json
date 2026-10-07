@@ -1,0 +1,79 @@
+{
+  "info": "Data contoh untuk mockup frontend PART 1. BUKAN database. Nanti diganti Cloudflare D1.",
+  "users": [
+    { "id": 1, "name": "Oqi", "role": "admin", "username": "admin", "password": "admin123" },
+    { "id": 2, "name": "Budi", "role": "student", "username": "budi", "password": "budi123" },
+    { "id": 3, "name": "Andi", "role": "student", "username": "andi", "password": "andi123" },
+    { "id": 4, "name": "Dina", "role": "pj", "username": "dina", "password": "dina123", "course_id": 2 }
+  ],
+  "folders": [
+    { "id": 1, "parent_id": null, "name": "Semester 1", "created_by": 1, "created_at": "2026-09-01", "updated_at": "2026-09-01" },
+    { "id": 2, "parent_id": 1, "name": "Pemrograman", "created_by": 1, "created_at": "2026-09-01", "updated_at": "2026-09-01" },
+    { "id": 3, "parent_id": 1, "name": "Basis Data", "created_by": 1, "created_at": "2026-09-01", "updated_at": "2026-09-01" },
+    { "id": 4, "parent_id": 1, "name": "Jaringan", "created_by": 1, "created_at": "2026-09-01", "updated_at": "2026-09-01" }
+  ],
+  "tasks": [
+    { "id": 1, "folder_id": 2, "title": "Tugas 1 - Algoritma", "description": "Buat program sorting (bubble, selection, insertion) beserta laporan singkat.", "deadline": "2026-10-10", "created_by": 1, "created_at": "2026-09-20", "updated_at": "2026-09-20" }
+  ],
+  "files": [
+    { "id": 1, "folder_id": 2, "user_id": 1, "name": "Tugas-Algoritma.pdf", "file_type": "application/pdf", "visibility": "public", "size": 482300, "created_at": "2026-10-01", "updated_at": "2026-10-01" },
+    { "id": 2, "folder_id": 2, "user_id": 2, "name": "Laporan-Algoritma.docx", "file_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "visibility": "private", "size": 118000, "created_at": "2026-10-02", "updated_at": "2026-10-02" },
+    { "id": 3, "folder_id": 3, "user_id": 1, "name": "Project-Akhir.zip", "file_type": "application/zip", "visibility": "public", "size": 2516582, "created_at": "2026-10-03", "updated_at": "2026-10-03" },
+    { "id": 4, "folder_id": 3, "user_id": 2, "name": "Tugas-BasisData.pdf", "file_type": "application/pdf", "visibility": "private", "size": 265000, "created_at": "2026-10-03", "updated_at": "2026-10-03" },
+    { "id": 5, "folder_id": 3, "user_id": 1, "name": "Catatan-KB.txt", "file_type": "text/plain", "visibility": "public", "size": 4200, "created_at": "2026-10-04", "updated_at": "2026-10-04" }
+  ],
+  "announcements": [
+    { "id": 1, "title": "Perubahan jadwal kuliah", "content": "Jadwal hari Rabu bergeser ke jam 13:00.", "category": "Jadwal penting", "created_by": 1, "created_at": "2026-10-05", "updated_at": "2026-10-05" }
+  ],
+  "schedules": [
+    { "id": 1, "day": "Senin", "start": "08:00", "end": "10:30", "course": "Pemrograman", "room": "A101", "lecturer": "Pak A" },
+    { "id": 2, "day": "Selasa", "start": "10:30", "end": "13:00", "course": "Basis Data", "room": "B102", "lecturer": "Bu B" },
+    { "id": 3, "day": "Rabu", "start": "13:00", "end": "15:30", "course": "Jaringan", "room": "C103", "lecturer": "Pak C" }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "title": "Catatan Algoritma",
+      "type": "document",
+      "content": "<h3>Algoritma</h3><p>Algoritma adalah urutan langkah yang logis untuk menyelesaikan masalah.</p>",
+      "data": null,
+      "image": "",
+      "created_at": "2026-10-05T10:00:00.000Z",
+      "updated_at": "2026-10-06T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "title": "Catatan Nilai Mahasiswa",
+      "type": "table",
+      "content": "",
+      "data": {
+        "headers": ["Nama", "Nilai", "Status"],
+        "rows": [
+          ["Budi", "90", "Lulus"],
+          ["Andi", "85", "Lulus"]
+        ]
+      },
+      "image": "",
+      "created_at": "2026-10-04T10:00:00.000Z",
+      "updated_at": "2026-10-05T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "title": "Daftar Tugas",
+      "type": "checklist",
+      "content": "",
+      "data": [
+        { "text": "Tugas Algoritma", "done": true },
+        { "text": "Laporan Basis Data", "done": false },
+        { "text": "Presentasi Jaringan", "done": false },
+        { "text": "Upload ke StudentHub", "done": true }
+      ],
+      "image": "",
+      "created_at": "2026-10-03T10:00:00.000Z",
+      "updated_at": "2026-10-04T10:00:00.000Z"
+    }
+  ]
+}
