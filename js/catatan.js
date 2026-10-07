@@ -171,6 +171,94 @@ function sortNotes(notes, criteria) {
   return sorted;
 }
 
+// ---------- Helper murni editor (diletakkan sebelum marker STUDENTHUB_PAGES
+// supaya bisa diuji langsung lewat Node) ----------
+
+function formatClock(ts) {
+  const d = new Date(ts);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return hh + '.' + mm;
+}
+
+// Format "Diedit …" sesuai spec §7: baru saja / jam / kemarin jam / tgl jam.
+function formatEditedTime(ts, nowTs) {
+  if (!ts) return '';
+  const now = nowTs || Date.now();
+  const diff = now - ts;
+  if (diff < 0 || diff < 60000) return 'Diedit baru saja';
+  const d = new Date(ts);
+  const n = new Date(now);
+  const sameDay = d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
+  if (sameDay) return 'Diedit ' + formatClock(ts);
+  const startToday = new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
+  if (ts >= startToday - 86400000) return 'Diedit kemarin ' + formatClock(ts);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return 'Diedit ' + dd + '/' + mm + ' ' + formatClock(ts);
+}
+
+function toDatetimeLocal(date) {
+  const p = (n) => String(n).padStart(2, '0');
+  return date.getFullYear() + '-' + p(date.getMonth() + 1) + '-' + p(date.getDate()) + 'T' + p(date.getHours()) + ':' + p(date.getMinutes());
+}
+
+// Preset pengingat: Nanti hari ini (20:00), Besok (08:00), Minggu depan (08:00).
+function reminderPresets(nowTs) {
+  const now = new Date(nowTs || Date.now());
+  const later = new Date(now);
+  later.setHours(20, 0, 0, 0);
+  if (later.getTime() <= now.getTime()) later.setDate(later.getDate() + 1);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(8, 0, 0, 0);
+  const week = new Date(now);
+  week.setDate(week.getDate() + 7);
+  week.setHours(8, 0, 0, 0);
+  return [
+    { label: 'Nanti hari ini', value: toDatetimeLocal(later) },
+    { label: 'Besok', value: toDatetimeLocal(tomorrow) },
+    { label: 'Minggu depan', value: toDatetimeLocal(week) }
+  ];
+}
+
+function formatReminderLabel(value) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(String(value || ''));
+  if (!m) return String(value || '');
+  return m[3] + '/' + m[2] + ' ' + m[4] + '.' + m[5];
+}
+
+// Bungkus seleksi plain-text dengan penanda formatting (toggle bila sudah ada).
+function wrapSelection(text, start, end, before, after) {
+  const s = String(text == null ? '' : text);
+  const a = Math.max(0, Math.min(start, end));
+  const b = Math.min(s.length, Math.max(start, end));
+  const close = after === undefined ? before : after;
+  const selected = s.slice(a, b);
+  // Sudah terbungkus penanda yang sama -> lepaskan.
+  if (selected.length >= before.length + close.length && selected.startsWith(before) && selected.endsWith(close)) {
+    const inner = selected.slice(before.length, selected.length - close.length);
+    return { value: s.slice(0, a) + inner + s.slice(b), selStart: a, selEnd: a + inner.length };
+  }
+  const wrapped = before + selected + close;
+  return { value: s.slice(0, a) + wrapped + s.slice(b), selStart: a + before.length, selEnd: b + before.length };
+}
+
+function stripFormat(input) {
+  return String(input == null ? '' : input)
+    .replace(/\*\*/g, '')
+    .replace(/~~/g, '')
+    .replace(/<\/?u>/gi, '')
+    .replace(/\*/g, '');
+}
+
+const FORMAT_MARKERS = {
+  bold: ['**', '**'],
+  italic: ['*', '*'],
+  underline: ['<u>', '</u>'],
+  strike: ['~~', '~~']
+};
+
 
 let catatanDocClickHandler = null;
 
