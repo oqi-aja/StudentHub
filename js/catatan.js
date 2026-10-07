@@ -4,27 +4,71 @@ const CATATAN_MAX_IMAGE_BYTES = 300 * 1024;
 const TITLE_MAX = 120;
 const LABELS_KEY = 'sh_mock_labels';
 
+function normalizeReminder(v) {
+  if (v === null || v === undefined || v === '') return null;
+  if (typeof v === 'string') {
+    const s = v.trim();
+    if (!s) return null;
+    return { enabled: true, dateTime: s };
+  }
+  if (typeof v === 'object') {
+    const dt = typeof v.dateTime === 'string' ? v.dateTime.trim() : '';
+    const enabled = v.enabled !== false && !!dt;
+    if (!dt) return null;
+    return { enabled: enabled, dateTime: dt };
+  }
+  return null;
+}
+
+function isReminderActive(note) {
+  if (!note) return false;
+  const r = normalizeReminder(note.reminder);
+  return !!(r && r.enabled);
+}
+
+function normalizeNote(n) {
+  if (!n || typeof n !== 'object') return n;
+  if (n.isDeleted === undefined) n.isDeleted = Boolean(n.isTrashed);
+  if ('isTrashed' in n) delete n.isTrashed;
+  if (!Array.isArray(n.labels)) n.labels = [];
+  if (!n.color || typeof n.color !== 'string') n.color = 'white';
+  if (n.isPinned === undefined) n.isPinned = false;
+  if (n.isArchived === undefined) n.isArchived = false;
+  if (n.isDeleted === undefined) n.isDeleted = false;
+  if (!Array.isArray(n.collaborators)) n.collaborators = [];
+  n.reminder = normalizeReminder(n.reminder);
+  if (n.isArchived && n.isDeleted) n.isArchived = false;
+  return n;
+}
+
 function readNotes() {
   try {
     const raw = localStorage.getItem(CATATAN_KEY);
     if (!raw) return [];
     const data = JSON.parse(raw);
     if (!Array.isArray(data)) return [];
-    // Migrasi catatan lama: flag sampah dulu bernama isTrashed.
-    return data.map(function (n) {
+    let changed = false;
+    const mapped = data.map(function (n) {
       if (!n || typeof n !== 'object') return n;
-      if (n.isDeleted === undefined) n.isDeleted = Boolean(n.isTrashed);
-      if ('isTrashed' in n) delete n.isTrashed;
-      if (!Array.isArray(n.collaborators)) n.collaborators = [];
-      return n;
+      const before = JSON.stringify(n);
+      const nn = normalizeNote(n);
+      if (JSON.stringify(nn) !== before) changed = true;
+      return nn;
     });
+    if (changed) {
+      try { localStorage.setItem(CATATAN_KEY, JSON.stringify(mapped)); } catch (e) {}
+    }
+    return mapped;
   } catch (e) { return []; }
 }
 
 function persist(notes) {
   try {
     localStorage.setItem(CATATAN_KEY, JSON.stringify(notes));
-  } catch (e) {}
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function readLabels() {
