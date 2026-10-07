@@ -295,6 +295,7 @@ function initCatatanPage() {
     },
     editor: {
       wrap: root.querySelector('[data-note-editor]'),
+      backdrop: root.querySelector('[data-note-backdrop]'),
       title: root.querySelector('[data-note-title]'),
       content: root.querySelector('[data-note-content]'),
       image: root.querySelector('[data-note-image]'),
@@ -303,16 +304,26 @@ function initCatatanPage() {
       removeBtn: root.querySelector('[data-note-remove-photo]'),
       pinBtn: root.querySelector('[data-editor-pin]'),
       archiveBtn: root.querySelector('[data-editor-archive]'),
+      restoreBtn: root.querySelector('[data-editor-restore]'),
+      deleteBtn: root.querySelector('[data-editor-delete]'),
+      collaboratorBtn: root.querySelector('[data-editor-collaborator]'),
+      undoBtn: root.querySelector('[data-editor-undo]'),
+      redoBtn: root.querySelector('[data-editor-redo]'),
+      saveRetry: root.querySelector('[data-save-retry]'),
       status: root.querySelector('[data-status]'),
-      statusBottom: root.querySelector('[data-status-bottom]'),
-      error: root.querySelector('.note-editor-error')
+      error: root.querySelector('.note-editor-error'),
+      chips: root.querySelector('[data-editor-chips]'),
+      formatMenu: root.querySelector('[data-format-menu]'),
+      noteMenu: root.querySelector('[data-note-menu]')
     },
     popoverColor: root.querySelector('[data-popover-color]'),
     popoverLabel: root.querySelector('[data-popover-label]'),
     popoverReminder: root.querySelector('[data-popover-reminder]'),
+    reminderPresets: root.querySelector('[data-reminder-presets]'),
     overlay: root.querySelector('[data-overlay]'),
     labelSheet: root.querySelector('[data-label-sheet]'),
     deleteSheet: root.querySelector('[data-delete-sheet]'),
+    collaboratorSheet: root.querySelector('[data-collaborator-sheet]'),
     snackbar: { wrap: root.querySelector('[data-snackbar]'), text: root.querySelector('[data-snackbar-text]'), undo: root.querySelector('[data-snackbar-undo]') },
     snackbarTimeout: null
   };
@@ -320,13 +331,13 @@ function initCatatanPage() {
   function render() {
     const all = listNotes();
     let filtered = [];
-    if (state.view === 'catatan') filtered = all.filter(n => !n.isArchived && !n.isTrashed);
-    else if (state.view === 'pengingat') filtered = all.filter(n => n.reminder && !n.isTrashed);
-    else if (state.view === 'arsip') filtered = all.filter(n => n.isArchived && !n.isTrashed);
-    else if (state.view === 'sampah') filtered = all.filter(n => n.isTrashed);
+    if (state.view === 'catatan') filtered = all.filter(n => !n.isArchived && !n.isDeleted);
+    else if (state.view === 'pengingat') filtered = all.filter(n => n.reminder && !n.isDeleted);
+    else if (state.view === 'arsip') filtered = all.filter(n => n.isArchived && !n.isDeleted);
+    else if (state.view === 'sampah') filtered = all.filter(n => n.isDeleted);
     else if (state.view.startsWith('label:')) {
       const lbl = state.view.replace('label:', '');
-      filtered = all.filter(n => n.labels && n.labels.includes(lbl) && !n.isTrashed);
+      filtered = all.filter(n => n.labels && n.labels.includes(lbl) && !n.isDeleted);
     }
     filtered = sortNotes(searchNotes(filtered, state.searchQuery), state.sortBy);
     const pinned = filtered.filter(n => n.isPinned);
@@ -374,17 +385,26 @@ function initCatatanPage() {
     card.dataset.color = note.color || 'white';
     if (note.isPinned) card.classList.add('is-pinned');
     const safeImage = note.image && String(note.image).startsWith('data:image/') ? escapeHtml(note.image) : '';
+    const trashed = Boolean(note.isDeleted);
+    const chips = [];
+    if (note.reminder) chips.push('<span class="note-chip">🔔 ' + escapeHtml(formatReminderLabel(note.reminder)) + '</span>');
+    (note.labels || []).slice(0, 3).forEach(function (lbl) { chips.push('<span class="note-chip">' + escapeHtml(lbl) + '</span>'); });
+    const meta = trashed ? 'Di Sampah' : (note.isArchived ? 'Diarsipkan' : '');
+    const menuItems = trashed
+      ? '<button class="catatan-menu-item" type="button" data-card-action="restore">Pulihkan</button>' +
+        '<button class="catatan-menu-item" type="button" data-card-action="delete">Hapus Permanen</button>'
+      : '<button class="catatan-menu-item" type="button" data-card-action="duplicate">Duplikasi</button>' +
+        '<button class="catatan-menu-item" type="button" data-card-action="trash">Hapus ke Sampah</button>';
     card.innerHTML = `
       ${safeImage ? `<img src="${safeImage}" class="note-card-img" alt="">` : ''}
       <div class="note-card-title">${escapeHtml(note.title || '(Tanpa judul)')}</div>
       <div class="note-card-preview">${escapeHtml((note.content || '').substring(0, 160))}</div>
-      <button class="icon-btn note-card-actions" type="button" data-card-pin title="Sematkan">📌</button>
+      ${chips.length ? `<div class="note-card-chips">${chips.join('')}</div>` : ''}
+      <div class="note-card-meta">${meta}</div>
+      <button class="icon-btn note-card-actions" type="button" data-card-pin title="Sematkan" ${trashed ? 'hidden' : ''}>📌</button>
       <div class="catatan-menu-wrap">
         <button class="icon-btn note-card-menu-btn" type="button" data-card-menu-btn title="Lainnya" aria-label="Lainnya">⋮</button>
-        <div class="catatan-menu" data-card-menu hidden>
-          <button class="catatan-menu-item" type="button" data-card-action="duplicate">Duplikasi</button>
-          <button class="catatan-menu-item" type="button" data-card-action="trash">Hapus ke Sampah</button>
-        </div>
+        <div class="catatan-menu" data-card-menu hidden>${menuItems}</div>
       </div>`;
     card.addEventListener('click', function () { openEditor(note); });
     const pin = card.querySelector('[data-card-pin]');
@@ -401,8 +421,11 @@ function initCatatanPage() {
       b.addEventListener('click', function (e) {
         e.stopPropagation();
         if (menu) menu.hidden = true;
-        if (b.dataset.cardAction === 'duplicate') duplicateNote(note);
-        else if (b.dataset.cardAction === 'trash') trashNote(note);
+        const act = b.dataset.cardAction;
+        if (act === 'duplicate') duplicateNote(note);
+        else if (act === 'trash') trashNote(note);
+        else if (act === 'restore') restoreNote(note);
+        else if (act === 'delete') openDeleteSheet(note);
       });
     });
     return card;
@@ -439,10 +462,21 @@ function initCatatanPage() {
   }
 
   function trashNote(note) {
-    const res = updateNote(note.id, { isTrashed: true });
+    const res = updateNote(note.id, { isDeleted: true });
     if (!res.ok) return showSnackbar(res.error);
+    if (state.selectedNote && state.selectedNote.id === note.id) closeEditor(true);
     showSnackbar('Dipindahkan ke Sampah.', function () {
-      updateNote(note.id, { isTrashed: false });
+      updateNote(note.id, { isDeleted: false });
+      render();
+    });
+    render();
+  }
+
+  function restoreNote(note) {
+    const res = updateNote(note.id, { isDeleted: false });
+    if (!res.ok) return showSnackbar(res.error);
+    showSnackbar('Catatan dipulihkan.', function () {
+      updateNote(note.id, { isDeleted: true });
       render();
     });
     render();
@@ -487,30 +521,138 @@ function initCatatanPage() {
     input.value = '';
   }
 
+  // ---------- Editor: dialog floating, autosave, undo/redo ----------
   let autosaveTimer = null;
-  function setStatus(text) {
-    if (els.editor.status) els.editor.status.textContent = text;
-    if (els.editor.statusBottom) els.editor.statusBottom.textContent = text;
+  const editorHistory = { stack: [], index: -1, timer: null };
+
+  function setStatus(text) { if (els.editor.status) els.editor.status.textContent = text; }
+  function setError(text) {
+    if (els.editor.error) els.editor.error.textContent = text || '';
+    if (els.editor.saveRetry) els.editor.saveRetry.hidden = !text;
   }
+  function showEditedTime() {
+    if (!state.selectedNote) return;
+    setStatus(formatEditedTime(state.selectedNote.updated_at) || 'Tersimpan ✓');
+  }
+
+  function autosizeContent() {
+    const ta = els.editor.content;
+    if (!ta) return;
+    ta.style.height = 'auto';
+    const max = Math.round(window.innerHeight * 0.4);
+    const needed = ta.scrollHeight + 4;
+    ta.style.height = Math.min(needed, max) + 'px';
+    ta.style.overflowY = needed > max ? 'auto' : 'hidden';
+  }
+
+  function currentDraft() {
+    return {
+      title: els.editor.title ? els.editor.title.value : '',
+      content: els.editor.content ? els.editor.content.value : '',
+      image: els.editor.image && !els.editor.image.hidden ? els.editor.image.src : ''
+    };
+  }
+
+  // Judul/isi kosong diganti placeholder supaya lolos validateNote (seperti quick note).
+  function saveDraft() {
+    if (!state.selectedNote) return { ok: true };
+    const d = currentDraft();
+    const res = updateNote(state.selectedNote.id, {
+      title: d.title.trim() || 'Tanpa judul',
+      content: d.content.trim() ? d.content : ' ',
+      image: d.image
+    });
+    if (res.ok) {
+      state.selectedNote = res.note;
+      setError('');
+      showEditedTime();
+    } else {
+      setStatus('Gagal menyimpan.');
+      setError(res.error);
+    }
+    return res;
+  }
+
+  function flushAutosave() {
+    if (autosaveTimer) { clearTimeout(autosaveTimer); autosaveTimer = null; }
+  }
+
   function scheduleAutosave() {
     if (!state.selectedNote) return;
+    setError('');
     setStatus('Menyimpan…');
-    clearTimeout(autosaveTimer);
+    flushAutosave();
     autosaveTimer = setTimeout(function () {
-      const res = updateNote(state.selectedNote.id, {
-        title: els.editor.title.value,
-        content: els.editor.content.value,
-        image: els.editor.image && !els.editor.image.hidden ? els.editor.image.src : ''
-      });
-      if (res.ok) setStatus('Tersimpan ✓');
-      else { setStatus('Gagal menyimpan.'); if (els.editor.error) els.editor.error.textContent = res.error; }
+      autosaveTimer = null;
+      saveDraft();
     }, 700);
+  }
+
+  // --- Riwayat undo/redo (snapshot {title, content}, coalesce 500 ms, maks 50) ---
+  function snapshot() { const d = currentDraft(); return { title: d.title, content: d.content }; }
+  function updateHistoryButtons() {
+    if (els.editor.undoBtn) els.editor.undoBtn.disabled = editorHistory.index <= 0;
+    if (els.editor.redoBtn) els.editor.redoBtn.disabled = editorHistory.index >= editorHistory.stack.length - 1;
+  }
+  function pushHistory() {
+    const snap = snapshot();
+    const top = editorHistory.stack[editorHistory.index];
+    if (top && top.title === snap.title && top.content === snap.content) return;
+    editorHistory.stack = editorHistory.stack.slice(0, editorHistory.index + 1);
+    editorHistory.stack.push(snap);
+    if (editorHistory.stack.length > 50) editorHistory.stack.shift();
+    editorHistory.index = editorHistory.stack.length - 1;
+    updateHistoryButtons();
+  }
+  function scheduleHistoryPush() {
+    clearTimeout(editorHistory.timer);
+    editorHistory.timer = setTimeout(function () { editorHistory.timer = null; pushHistory(); }, 500);
+  }
+  function resetHistory() {
+    clearTimeout(editorHistory.timer);
+    editorHistory.timer = null;
+    editorHistory.stack = [snapshot()];
+    editorHistory.index = 0;
+    updateHistoryButtons();
+  }
+  function applyHistory(i) {
+    if (i < 0 || i >= editorHistory.stack.length || i === editorHistory.index) return;
+    editorHistory.index = i;
+    const snap = editorHistory.stack[i];
+    if (els.editor.title) els.editor.title.value = snap.title;
+    if (els.editor.content) els.editor.content.value = snap.content;
+    autosizeContent();
+    updateHistoryButtons();
+    scheduleAutosave();
+  }
+  function undoEditor() {
+    // Ketikan yang masih debounce dimasukkan dulu supaya tidak ikut hilang.
+    if (editorHistory.timer) { clearTimeout(editorHistory.timer); editorHistory.timer = null; pushHistory(); }
+    applyHistory(editorHistory.index - 1);
+  }
+  function redoEditor() {
+    if (editorHistory.timer) { clearTimeout(editorHistory.timer); editorHistory.timer = null; }
+    applyHistory(editorHistory.index + 1);
+  }
+
+  function renderEditorChips() {
+    if (!els.editor.chips) return;
+    els.editor.chips.innerHTML = '';
+    const note = state.selectedNote;
+    if (!note) return;
+    const add = function (text) {
+      const span = document.createElement('span');
+      span.className = 'note-chip';
+      span.textContent = text;
+      els.editor.chips.appendChild(span);
+    };
+    (note.labels || []).forEach(function (lbl) { add('🏷️ ' + lbl); });
+    if (note.reminder) add('🔔 ' + formatReminderLabel(note.reminder));
+    (note.collaborators || []).forEach(function (u) { add('👤 ' + u); });
   }
 
   function openEditor(note) {
     state.selectedNote = note;
-    if (els.shell) els.shell.dataset.mode = 'editor';
-    if (els.editor.wrap) els.editor.wrap.hidden = false;
     if (els.editor.title) els.editor.title.value = note.title || '';
     if (els.editor.content) els.editor.content.value = note.content || '';
     if (els.editor.image) {
@@ -518,11 +660,23 @@ function initCatatanPage() {
       els.editor.image.hidden = !note.image;
     }
     if (els.editor.removeBtn) els.editor.removeBtn.hidden = !note.image;
-    if (els.editor.wrap) els.editor.wrap.dataset.color = note.color || 'white';
-    if (els.editor.error) els.editor.error.textContent = '';
-    setStatus('Tersimpan ✓');
+    if (els.editor.wrap) {
+      els.editor.wrap.dataset.color = note.color || 'white';
+      els.editor.wrap.hidden = false;
+    }
+    if (els.editor.backdrop) els.editor.backdrop.hidden = false;
+    document.body.classList.add('catatan-modal-open');
+    const trashed = Boolean(note.isDeleted);
+    if (els.editor.archiveBtn) els.editor.archiveBtn.hidden = trashed;
+    if (els.editor.restoreBtn) els.editor.restoreBtn.hidden = !trashed;
+    if (els.editor.deleteBtn) els.editor.deleteBtn.hidden = !trashed;
+    setError('');
     updateEditorPin(note.isPinned);
-    if (els.editor.title) els.editor.title.focus();
+    renderEditorChips();
+    resetHistory();
+    autosizeContent();
+    showEditedTime();
+    if (els.editor.content) els.editor.content.focus();
   }
 
   function updateEditorPin(pinned) {
@@ -530,20 +684,117 @@ function initCatatanPage() {
     if (els.quick.pinBtn) els.quick.pinBtn.classList.toggle('is-active', state.quickPinned);
   }
 
-  function closeEditor() {
-    if (state.selectedNote) {
-      const res = updateNote(state.selectedNote.id, {
-        title: els.editor.title.value,
-        content: els.editor.content.value,
-        image: els.editor.image && !els.editor.image.hidden ? els.editor.image.src : ''
-      });
-      if (!res.ok) { if (els.editor.error) els.editor.error.textContent = res.error; return; }
+  function hideAllPopovers() {
+    if (els.popoverColor) hideColorPopover();
+    if (els.popoverLabel) els.popoverLabel.hidden = true;
+    if (els.popoverReminder) els.popoverReminder.hidden = true;
+  }
+
+  // force=true: catatan sudah dipindah/dihapus, jangan coba menyimpan.
+  function closeEditor(force) {
+    if (state.selectedNote && !force) {
+      flushAutosave();
+      const res = saveDraft();
+      if (!res.ok) return; // jangan buang perubahan yang belum tersimpan
     }
-    clearTimeout(autosaveTimer);
+    flushAutosave();
+    if (editorHistory.timer) { clearTimeout(editorHistory.timer); editorHistory.timer = null; }
     state.selectedNote = null;
-    if (els.shell) els.shell.dataset.mode = 'grid';
     if (els.editor.wrap) els.editor.wrap.hidden = true;
+    if (els.editor.backdrop) els.editor.backdrop.hidden = true;
+    if (els.editor.file) els.editor.file.value = '';
+    if (els.editor.noteMenu) els.editor.noteMenu.hidden = true;
+    if (els.editor.formatMenu) els.editor.formatMenu.hidden = true;
+    hideAllPopovers();
+    document.body.classList.remove('catatan-modal-open');
     render();
+  }
+
+  // Escape / klik backdrop: tutup lapisan paling atas dulu.
+  function closeTopmost() {
+    if (els.editor.noteMenu && !els.editor.noteMenu.hidden) { els.editor.noteMenu.hidden = true; return true; }
+    if (els.editor.formatMenu && !els.editor.formatMenu.hidden) { els.editor.formatMenu.hidden = true; return true; }
+    if (els.popoverColor && !els.popoverColor.hidden) { hideColorPopover(); return true; }
+    if (els.popoverLabel && !els.popoverLabel.hidden) { els.popoverLabel.hidden = true; return true; }
+    if (els.popoverReminder && !els.popoverReminder.hidden) { els.popoverReminder.hidden = true; return true; }
+    if (els.collaboratorSheet && !els.collaboratorSheet.hidden) { closeSheets(); return true; }
+    if (els.labelSheet && !els.labelSheet.hidden) { closeSheets(); return true; }
+    if (els.deleteSheet && !els.deleteSheet.hidden) { closeSheets(); return true; }
+    if (state.selectedNote) { closeEditor(); return true; }
+    return false;
+  }
+
+  // --- Format teks (penanda Markdown + <u> pada plain text) ---
+  function applyFormat(kind) {
+    const ta = els.editor.content;
+    if (!state.selectedNote || !ta) return;
+    if (kind === 'clear') {
+      ta.value = stripFormat(ta.value);
+    } else {
+      const pair = FORMAT_MARKERS[kind];
+      if (!pair) return;
+      const r = wrapSelection(ta.value, ta.selectionStart, ta.selectionEnd, pair[0], pair[1]);
+      ta.value = r.value;
+      if (typeof ta.setSelectionRange === 'function') ta.setSelectionRange(r.selStart, r.selEnd);
+    }
+    if (els.editor.formatMenu) els.editor.formatMenu.hidden = true;
+    if (els.editor.noteMenu) els.editor.noteMenu.hidden = true;
+    autosizeContent();
+    pushHistory();
+    scheduleAutosave();
+    ta.focus();
+  }
+
+  // --- Kolaborator (state lokal; belum tersambung backend) ---
+  function renderCollaboratorSheet() {
+    if (!els.collaboratorSheet) return;
+    const list = els.collaboratorSheet.querySelector('[data-collaborator-list]');
+    if (!list) return;
+    list.innerHTML = '';
+    const note = state.selectedNote;
+    const accounts = (typeof listAccounts === 'function' ? listAccounts() : []).filter(function (a) {
+      return a && (!note || a.id !== note.user_id);
+    });
+    if (!accounts.length) {
+      const p = document.createElement('p');
+      p.className = 'card-meta';
+      p.textContent = 'Belum ada akun lain untuk dibagikan.';
+      list.appendChild(p);
+      return;
+    }
+    const shared = note && Array.isArray(note.collaborators) ? note.collaborators : [];
+    accounts.forEach(function (acc) {
+      const row = document.createElement('div');
+      row.className = 'modal-label-row';
+      const name = document.createElement('span');
+      name.className = 'modal-label-name';
+      name.textContent = (acc.name || acc.username || 'Pengguna') + ' · @' + (acc.username || '-');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'button button--ghost button--sm';
+      const on = shared.indexOf(acc.username) !== -1;
+      btn.textContent = on ? 'Batalkan' : 'Bagikan';
+      btn.onclick = function () {
+        if (!state.selectedNote) return;
+        const cur = Array.isArray(state.selectedNote.collaborators) ? state.selectedNote.collaborators.slice() : [];
+        const i = cur.indexOf(acc.username);
+        if (i === -1) cur.push(acc.username); else cur.splice(i, 1);
+        const res = updateNote(state.selectedNote.id, { collaborators: cur });
+        if (!res.ok) return showSnackbar(res.error);
+        state.selectedNote.collaborators = cur;
+        renderCollaboratorSheet();
+        renderEditorChips();
+      };
+      row.appendChild(name);
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+  }
+  function openCollaboratorSheet() {
+    if (!els.collaboratorSheet || !state.selectedNote) return;
+    renderCollaboratorSheet();
+    if (els.overlay) els.overlay.hidden = false;
+    els.collaboratorSheet.hidden = false;
   }
 
   function expandQuick() {
@@ -602,16 +853,29 @@ function initCatatanPage() {
     if (els.popoverReminder && !els.popoverReminder.hidden && !els.popoverReminder.contains(e.target)) els.popoverReminder.hidden = true;
     closeAllCardMenus();
     closeNoteMenu();
+    if (els.editor.formatMenu) els.editor.formatMenu.hidden = true;
   };
   document.addEventListener('click', catatanDocClickHandler);
 
+  // Tempatkan popover: di bawah anchor, pindah ke atas bila tidak muat.
+  function placePopover(pop, anchor) {
+    const r = anchor.getBoundingClientRect();
+    pop.hidden = false;
+    const w = pop.offsetWidth || 220;
+    const h = pop.offsetHeight || 160;
+    const left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
+    let top = r.bottom + 6;
+    if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
   function togglePopover(pop, anchor) {
     if (!pop) return;
     if (pop.hidden) {
-      const r = anchor.getBoundingClientRect();
-      pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 240)) + 'px';
-      pop.style.top = (r.bottom + 6) + 'px';
-      pop.hidden = false;
+      hideAllPopovers();
+      if (els.editor.noteMenu) els.editor.noteMenu.hidden = true;
+      if (els.editor.formatMenu) els.editor.formatMenu.hidden = true;
+      placePopover(pop, anchor);
     } else {
       pop.hidden = true;
     }
@@ -639,6 +903,7 @@ function initCatatanPage() {
         if (!res.ok) return showSnackbar(res.error);
         state.selectedNote.labels = cur;
         renderLabelPopover();
+        renderEditorChips();
         render();
       };
       list.appendChild(b);
@@ -661,33 +926,45 @@ function initCatatanPage() {
   }
 
   // --- Popover pengingat ---
+  function renderReminderPresets() {
+    if (!els.reminderPresets) return;
+    els.reminderPresets.innerHTML = '';
+    const input = els.popoverReminder ? els.popoverReminder.querySelector('[data-popover-reminder-time]') : null;
+    reminderPresets().forEach(function (p) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'button button--ghost button--sm';
+      b.textContent = p.label;
+      b.onclick = function () { if (input) input.value = p.value; };
+      els.reminderPresets.appendChild(b);
+    });
+  }
+  function saveReminder(val) {
+    if (!state.selectedNote) return;
+    const res = updateNote(state.selectedNote.id, { reminder: val || null });
+    if (!res.ok) return showSnackbar(res.error);
+    state.selectedNote.reminder = val || null;
+    renderEditorChips();
+    els.popoverReminder.hidden = true;
+    showEditedTime();
+    showSnackbar(val ? 'Pengingat disetel.' : 'Pengingat dihapus.');
+  }
   root.querySelectorAll('[data-action="reminder-popover"]').forEach(b => b.onclick = (e) => {
     e.stopPropagation();
     if (!els.popoverReminder || !state.selectedNote) return;
     const input = els.popoverReminder.querySelector('[data-popover-reminder-time]');
     if (input) input.value = state.selectedNote.reminder || '';
+    renderReminderPresets();
     togglePopover(els.popoverReminder, b);
   });
   if (els.popoverReminder) {
     const save = els.popoverReminder.querySelector('[data-action="save-reminder"]');
     const clr = els.popoverReminder.querySelector('[data-action="clear-reminder"]');
     if (save) save.onclick = function () {
-      if (!state.selectedNote) return;
       const input = els.popoverReminder.querySelector('[data-popover-reminder-time]');
-      const val = input ? input.value : '';
-      const res = updateNote(state.selectedNote.id, { reminder: val || null });
-      if (!res.ok) return showSnackbar(res.error);
-      state.selectedNote.reminder = val || null;
-      els.popoverReminder.hidden = true;
-      showSnackbar(val ? 'Pengingat disetel.' : 'Pengingat dihapus.');
+      saveReminder(input ? input.value : '');
     };
-    if (clr) clr.onclick = function () {
-      if (!state.selectedNote) return;
-      updateNote(state.selectedNote.id, { reminder: null });
-      state.selectedNote.reminder = null;
-      els.popoverReminder.hidden = true;
-      showSnackbar('Pengingat dihapus.');
-    };
+    if (clr) clr.onclick = function () { saveReminder(''); };
   }
 
   // --- Sheet label: kelola (tambah/hapus) daftar label ---
@@ -745,6 +1022,7 @@ function initCatatanPage() {
   function closeSheets() {
     if (els.labelSheet) els.labelSheet.hidden = true;
     if (els.deleteSheet) els.deleteSheet.hidden = true;
+    if (els.collaboratorSheet) els.collaboratorSheet.hidden = true;
     if (els.overlay) els.overlay.hidden = true;
   }
   function openDeleteSheet(note) {
@@ -763,7 +1041,7 @@ function initCatatanPage() {
       closeSheets();
       if (!res.ok) return showSnackbar(res.error);
       showSnackbar('Catatan dihapus permanen.');
-      if (state.selectedNote && state.selectedNote.id === id) closeEditor();
+      if (state.selectedNote && state.selectedNote.id === id) closeEditor(true);
       else render();
     };
     els.deleteSheet.querySelectorAll('[data-cancel],[data-close]').forEach(b => b.onclick = closeSheets);
