@@ -131,7 +131,7 @@ function createNote(input) {
   const user = getCurrentUser();
   const notes = readNotes();
   const now = Date.now();
-  const newNote = {
+  const newNote = normalizeNote({
     ...res.value,
     id: now + Math.floor(Math.random() * 1000),
     user_id: user.id,
@@ -141,12 +141,13 @@ function createNote(input) {
     isArchived: Boolean(input.isArchived),
     isDeleted: false,
     collaborators: Array.isArray(input.collaborators) ? input.collaborators : [],
-    reminder: input.reminder || null,
+    reminder: input.reminder,
     created_at: now,
     updated_at: now
-  };
+  });
   notes.push(newNote);
-  persist(notes);
+  const okp = persist(notes);
+  if (!okp) return { ok: false, error: 'Gagal menyimpan catatan.' };
   return { ok: true, note: newNote, id: newNote.id };
 }
 
@@ -175,7 +176,7 @@ function updateNote(id, input) {
   if (archivedGiven && !deletedGiven && nextArchived) nextDeleted = false;
   if (deletedGiven && !archivedGiven && nextDeleted) nextArchived = false;
 
-  notes[idx] = {
+  const noteNext = normalizeNote({
     ...prev,
     ...res.value,
     color: input.color !== undefined ? input.color : prev.color,
@@ -186,8 +187,10 @@ function updateNote(id, input) {
     isDeleted: nextDeleted,
     reminder: input.reminder !== undefined ? input.reminder : prev.reminder,
     updated_at: Date.now()
-  };
-  persist(notes);
+  });
+  notes[idx] = noteNext;
+  const okp = persist(notes);
+  if (!okp) return { ok: false, error: 'Gagal menyimpan catatan.' };
   return { ok: true, note: notes[idx] };
 }
 
@@ -197,7 +200,8 @@ function deleteNote(id) {
   if (idx === -1) return { ok: false, error: 'Catatan tidak ditemukan.' };
   if (typeof can === 'function' && !can('catatan-ubah', notes[idx])) return { ok: false, error: 'Catatan tidak ditemukan.' };
   notes.splice(idx, 1);
-  persist(notes);
+  const okp = persist(notes);
+  if (!okp) return { ok: false, error: 'Gagal menyimpan catatan.' };
   return { ok: true };
 }
 
@@ -299,6 +303,39 @@ function stripFormat(input) {
     .replace(/<\/?u>/gi, '')
     .replace(/\*/g, '');
 }
+
+const EMPTY_STATES = {
+  catatan: {
+    icon: '💡',
+    title: 'Belum ada catatan',
+    subtitle: 'Mulai dengan membuat catatan pertama Anda'
+  },
+  tersemat: {
+    icon: '📌',
+    title: 'Tidak ada catatan yang disematkan',
+    subtitle: 'Sematkan catatan penting agar mudah ditemukan'
+  },
+  pengingat: {
+    icon: '🔔',
+    title: 'Tidak ada pengingat aktif',
+    subtitle: 'Atur pengingat pada catatan untuk melihatnya di sini'
+  },
+  label: {
+    icon: '🏷️',
+    title: 'Tidak ada catatan dengan label ini',
+    subtitle: 'Tambahkan label ke catatan untuk mengelompokkannya'
+  },
+  arsip: {
+    icon: '📥',
+    title: 'Arsip kosong',
+    subtitle: 'Catatan yang diarsipkan akan muncul di sini'
+  },
+  sampah: {
+    icon: '🗑️',
+    title: 'Sampah kosong',
+    subtitle: 'Catatan yang dihapus akan masuk ke Sampah'
+  }
+};
 
 const FORMAT_MARKERS = {
   bold: ['**', '**'],
