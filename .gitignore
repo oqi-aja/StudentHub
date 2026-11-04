@@ -9,3 +9,7 @@ package-lock.json
 .DS_Store
 Thumbs.db
 *.log
+
+# Supabase config lokal (URL + anon key per-instance)
+# JANGAN COMMIT. Hanya berisi publishable/anon key, BUKAN service_role.
+js/config.js

@@ -4,15 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StudentHub</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('sh_theme');
+        if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
       <h1 class="app-title">StudentHub</h1>
+      <div class="header-actions">
+        <button class="theme-toggle-btn" id="sh-theme-toggle" type="button" aria-label="Ganti tema gelap/terang" title="Ganti tema">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -22,29 +46,47 @@
 
   <nav class="bottom-nav" aria-label="Navigasi utama">
     <a class="nav-item" href="#home" data-page="home" data-roles="admin,student,pj,guest">
-      <span class="nav-icon">🏠</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      </span>
       <span class="nav-label">Home</span>
     </a>
     <a class="nav-item" href="#tugas" data-page="tugas" data-roles="admin,student,pj">
-      <span class="nav-icon">📚</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+      </span>
       <span class="nav-label">Tugas</span>
     </a>
     <a class="nav-item" href="#daftar" data-page="daftar" data-roles="admin,student,pj,guest">
-      <span class="nav-icon">📋</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="m9 14 2 2 4-4"></path></svg>
+      </span>
       <span class="nav-label">Daftar Tugas</span>
     </a>
     <a class="nav-item" href="#informasi" data-page="informasi" data-roles="admin,student,pj,guest">
-      <span class="nav-icon">📢</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+      </span>
       <span class="nav-label">Informasi</span>
     </a>
     <a class="nav-item" href="#profil" data-page="profil" data-roles="admin,student,pj">
-      <span class="nav-icon">👤</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </span>
       <span class="nav-label">Profil</span>
     </a>
   </nav>
 
+  <!-- Supabase JS SDK via CDN (vanilla JS, no npm/bundler). -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Konfigurasi Supabase lokal (di-gitignore, berisi anon key saja). -->
+  <script src="js/config.js"></script>
+
   <script src="js/auth.js" defer></script>
+  <script src="js/api.js" defer></script>
   <script src="js/tugas.js" defer></script>
+  <script src="js/daftar-tugas.js" defer></script>
+  <script src="js/detail-tugas.js" defer></script>
   <script src="js/profil.js" defer></script>
   <script src="js/dashboard.js" defer></script>
   <script src="js/akun.js" defer></script>

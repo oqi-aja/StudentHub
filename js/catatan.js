@@ -8,22 +8,19 @@ function normalizeReminder(v) {
   if (v === null || v === undefined || v === '') return null;
   if (typeof v === 'string') {
     const s = v.trim();
-    if (!s) return null;
-    return { enabled: true, dateTime: s };
+    return s || null;
   }
   if (typeof v === 'object') {
+    if (v.enabled === false) return null;
     const dt = typeof v.dateTime === 'string' ? v.dateTime.trim() : '';
-    const enabled = v.enabled !== false && !!dt;
-    if (!dt) return null;
-    return { enabled: enabled, dateTime: dt };
+    return dt || null;
   }
   return null;
 }
 
 function isReminderActive(note) {
-  if (!note) return false;
-  const r = normalizeReminder(note.reminder);
-  return !!(r && r.enabled);
+  if (!note || !note.reminder) return false;
+  return true;
 }
 
 function normalizeNote(n) {

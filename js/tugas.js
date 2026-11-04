@@ -315,6 +315,7 @@ function fmCreateFolder(name) {
     created_at: fmToday(),
     updated_at: fmToday(),
   });
+  fmPersistFolders();
   fmRender();
   fmToast(`Folder "${clean}" dibuat.`);
 }
@@ -327,13 +328,14 @@ function fmRenameItem(item, name) {
   if (item.type === 'task') row.title = clean;
   else row.name = clean;
   row.updated_at = fmToday();
+  if (item.type === 'folder' || item.type === 'file') fmPersistFolders();
   fmRender();
   fmToast(`Nama diubah jadi "${clean}".`);
 }
 
 function fmDeleteItem(item) {
   const kind = item.type === 'folder' ? 'folder' : item.type === 'task' ? 'tugas' : 'file';
-  if (!window.confirm(`Hapus ${kind} "${item.name}"? Perubahan ini hanya berlaku di sesi ini.`)) return;
+  if (!window.confirm(`Hapus ${kind} "${item.name}"?`)) return;
   const list = fm.data[ITEM_SOURCE[item.type]] || [];
   const index = list.findIndex((r) => r.id === item.id);
   if (index === -1) return;
@@ -345,26 +347,66 @@ function fmDeleteItem(item) {
     });
   }
   if (fm.folderId === item.id) fm.folderId = item.parent_id;
+  if (item.type === 'folder' || item.type === 'file') fmPersistFolders();
   fmRender();
   fmToast(`"${item.name}" dihapus.`);
 }
 
-function fmAddFile(file) {
+// fmAddFile kini async: upload lewat SH_API (Supabase Storage + files row,
+// atau in-memory di mock mode), lalu auto-detect submission kalau user = mahasiswa.
+// Begitu file ter-upload DAN submission ter-cat, status mahasiswa berubah
+// menjadi "Sudah dikumpulkan" otomatis (lihat js/daftar-tugas.js).
+async function fmAddFile(file) {
   if (!file) return;
-  fm.data.files.push({
-    id: fmNextId(fm.data.files),
-    folder_id: fm.folderId,
-    user_id: getCurrentUser().id,
-    name: file.name,
-    file_type: file.type || 'application/octet-stream',
-    // File Ketua Kelas boleh dilihat tamu, file mahasiswa tidak.
-    visibility: isAdmin() ? 'public' : 'private',
-    size: file.size,
-    created_at: fmToday(),
-    updated_at: fmToday(),
-  });
+  if (!window.SH_API) {
+    fmToast('API belum siap. Coba refresh halaman.');
+    return;
+  }
+
+  // 1) Upload file (mock = in-memory push; supabase = Storage + DB row).
+  //    uploadFile sudah set user_id, visibility (public utk admin/PJ, private utk
+  //    mahasiswa), file_type, size, created_at, dll.
+  const uploadRes = await window.SH_API.uploadFile(file, fm.folderId);
+  if (!uploadRes.ok) {
+    fmToast(`Gagal upload: ${uploadRes.error}`);
+    return;
+  }
+  const newFile = uploadRes.file;
+
+  // 2) Push ke fm.data.files agar langsung ter-render di file manager.
+  //    (Di Supabase mode, uploadFile sudah insert row ke DB; kita tetap
+  //    duplikat ke fm.data.files supaya UI update tanpa reload.)
+  if (fm.data && Array.isArray(fm.data.files)) {
+    const exists = fm.data.files.some((f) => String(f.id) === String(newFile.id));
+    if (!exists) fm.data.files.push(newFile);
+  }
+
+  // 3) AUTO-SUBMISSION DETECTION.
+  //    Kalau folder tempat upload = submission_folder_id salah satu task,
+  //    dan user adalah mahasiswa, otomatis catat submission ke
+  //    task_submissions. Status mahasiswa lalu "Sudah dikumpulkan".
+  if (getRole() === 'student') {
+    try {
+      const result = await window.SH_API.detectSubmissionOnUpload(newFile);
+      if (result && result.task) {
+        fmRender();
+        fmToast(`✓ Tugas "${result.task.title}" berhasil dikumpulkan! Status: SUDAH DIKUMPULKAN.`);
+        return;
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('[fmAddFile] detectSubmissionOnUpload gagal:', e);
+    }
+  }
+
   fmRender();
-  fmToast(`"${file.name}" ditambahkan (hilang saat refresh).`);
+  fmToast(`"${file.name}" ditambahkan.`);
+}
+
+// Persist folder tambahan ke localStorage via api.persistFolders()
+// Dipanggil setelah fmCreateFolder/fmRenameItem/fmDeleteItem.
+function fmPersistFolders() {
+  if (window.SH_API) window.SH_API.persistFolders();
 }
 
 let fmToastTimer;
@@ -498,6 +540,14 @@ function initTugasPage() {
 
   fm.view = localStorage.getItem(VIEW_KEY) === 'grid' ? 'grid' : 'list';
 
+  // ====== Deep-link: ?folder=X ======
+  // Daftar Tugas bisa link langsung ke folder tertentu via #tugas?folder=5
+  const hash = window.location.hash || '';
+  const folderMatch = hash.match(/folder=(\d+)/);
+  if (folderMatch) {
+    fm.folderId = Number(folderMatch[1]);
+  }
+
   root.addEventListener('click', fmOnClick);
   root.addEventListener('change', (e) => {
     if (e.target.id === 'fm-sort') { fm.sort = e.target.value; fmRender(); return; }
@@ -516,12 +566,23 @@ function initTugasPage() {
     if (e.key === 'Enter' && e.target.id === 'fm-folder-input') fmRunAction('create-folder-save', null);
   });
 
-  fetch('data/contoh.json')
-    .then((res) => res.json())
-    .then((data) => { fm.data = data; fmRender(); })
+  // ====== Load data lewat SH_API ======
+  // Mock mode: fetch data/contoh.json + apply localStorage overrides.
+  // Supabase mode: fetch dari tabel folders/files/tasks/courses/profiles/task_submissions.
+  // attachData() otomatis dipanggil di loadAll() supaya cache konsisten.
+  if (!window.SH_API) {
+    document.getElementById('fm-items').innerHTML =
+      '<p class="fm-empty">API belum siap. Coba refresh halaman.</p>';
+    return;
+  }
+  window.SH_API.loadAll()
+    .then((data) => {
+      fm.data = data;
+      fmRender();
+    })
     .catch(() => {
       document.getElementById('fm-items').innerHTML =
-        '<p class="fm-empty">Gagal memuat data/contoh.json. Buka lewat http://localhost:8000, bukan file://.</p>';
+        '<p class="fm-empty">Gagal memuat data. Buka lewat http://localhost:8000, bukan file://. Kalau aktif Supabase, periksa konfigurasi di js/config.js.</p>';
     });
 }
 

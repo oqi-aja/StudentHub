@@ -1,10 +1,15 @@
 {
-  "info": "Data contoh untuk mockup frontend PART 1. BUKAN database. Nanti diganti Cloudflare D1.",
+  "info": "Data contoh untuk mockup frontend. BUKAN database. Nanti diganti Supabase. Penambahan: courses, task.course_id, task.submission_folder_id, task.dosen, task_submissions (untuk fitur submission tracking).",
   "users": [
     { "id": 1, "name": "Oqi", "role": "admin", "username": "admin", "password": "admin123" },
     { "id": 2, "name": "Budi", "role": "student", "username": "budi", "password": "budi123" },
     { "id": 3, "name": "Andi", "role": "student", "username": "andi", "password": "andi123" },
     { "id": 4, "name": "Dina", "role": "pj", "username": "dina", "password": "dina123", "course_id": 2 }
+  ],
+  "courses": [
+    { "id": 1, "name": "Pemrograman", "code": "IF-101" },
+    { "id": 2, "name": "Basis Data", "code": "IF-102" },
+    { "id": 3, "name": "Jaringan", "code": "IF-103" }
   ],
   "folders": [
     { "id": 1, "parent_id": null, "name": "Semester 1", "created_by": 1, "created_at": "2026-09-01", "updated_at": "2026-09-01" },
@@ -13,7 +18,53 @@
     { "id": 4, "parent_id": 1, "name": "Jaringan", "created_by": 1, "created_at": "2026-09-01", "updated_at": "2026-09-01" }
   ],
   "tasks": [
-    { "id": 1, "folder_id": 2, "title": "Tugas 1 - Algoritma", "description": "Buat program sorting (bubble, selection, insertion) beserta laporan singkat.", "deadline": "2026-10-10", "created_by": 1, "created_at": "2026-09-20", "updated_at": "2026-09-20" }
+    {
+      "id": 1,
+      "folder_id": 2,
+      "submission_folder_id": 2,
+      "course_id": 1,
+      "title": "Tugas 1 - Algoritma",
+      "description": "Buat program sorting (bubble, selection, insertion) beserta laporan singkat.",
+      "deadline": "2026-10-10",
+      "dosen": "Pak A",
+      "topic": "Pertemuan 1",
+      "attachments": [
+        { "file_id": 1, "name": "Tugas-Algoritma.pdf", "file_type": "application/pdf", "size": 482300, "storage_path": null }
+      ],
+      "created_by": 1,
+      "created_at": "2026-09-20",
+      "updated_at": "2026-09-20"
+    },
+    {
+      "id": 2,
+      "folder_id": 3,
+      "submission_folder_id": 3,
+      "course_id": 2,
+      "title": "Tugas 1 - ERD Perpustakaan",
+      "description": "Buat ERD untuk sistem perpustakaan beserta normalization 3NF.",
+      "deadline": "2026-10-15",
+      "dosen": "Bu B",
+      "topic": "Pertemuan 1",
+      "attachments": [],
+      "created_by": 1,
+      "created_at": "2026-09-25",
+      "updated_at": "2026-09-25"
+    },
+    {
+      "id": 3,
+      "folder_id": 3,
+      "submission_folder_id": 3,
+      "course_id": 2,
+      "title": "Quiz 1 - Normalisasi",
+      "description": "Analisis normalisasi 1NF, 2NF, 3NF dari skema yang diberikan.",
+      "deadline": "2026-10-20",
+      "dosen": "Bu B",
+      "topic": "Quiz",
+      "attachments": [],
+      "created_by": 1,
+      "created_at": "2026-09-28",
+      "updated_at": "2026-09-28"
+    }
   ],
   "files": [
     { "id": 1, "folder_id": 2, "user_id": 1, "name": "Tugas-Algoritma.pdf", "file_type": "application/pdf", "visibility": "public", "size": 482300, "created_at": "2026-10-01", "updated_at": "2026-10-01" },
@@ -22,6 +73,7 @@
     { "id": 4, "folder_id": 3, "user_id": 2, "name": "Tugas-BasisData.pdf", "file_type": "application/pdf", "visibility": "private", "size": 265000, "created_at": "2026-10-03", "updated_at": "2026-10-03" },
     { "id": 5, "folder_id": 3, "user_id": 1, "name": "Catatan-KB.txt", "file_type": "text/plain", "visibility": "public", "size": 4200, "created_at": "2026-10-04", "updated_at": "2026-10-04" }
   ],
+  "task_submissions": [],
   "announcements": [
     { "id": 1, "title": "Perubahan jadwal kuliah", "content": "Jadwal hari Rabu bergeser ke jam 13:00.", "category": "Jadwal penting", "created_by": 1, "created_at": "2026-10-05", "updated_at": "2026-10-05" }
   ],

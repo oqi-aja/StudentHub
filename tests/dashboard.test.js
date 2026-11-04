@@ -11,7 +11,7 @@ const src = fs.readFileSync(path.join(ROOT, "js", "dashboard.js"), "utf8")
 
 const dash = new Function(src + "\n" + [
   "return { dashFormatDate, dashDaysLeft, dashDeadlineNote, dashCourseName,",
-  "  dashEscape, dashList, BULAN };",
+  "  dashEscape, dashList, BULAN, dashBadgeClass, dashTodayDayName, dashTodayFormatted };",
 ].join("\n"))();
 
 // --- Format tanggal ---
@@ -64,4 +64,16 @@ assert.strictEqual(dash.dashEscape(undefined), "");
 assert.ok(dash.dashList([]).includes("Belum ada data"));
 assert.strictEqual(dash.dashList(["<b>a</b>", "<i>b</i>"]), "<b>a</b><i>b</i>", "dashList menyambung item");
 
-console.log("dashboard.test.js lulus: format tanggal, sisa hari, nama matkul, escaping, empty state.");
+// --- Badge Class Urgency ---
+assert.strictEqual(dash.dashBadgeClass(iso(0)), "badge badge--danger", "deadline hari ini = danger");
+assert.strictEqual(dash.dashBadgeClass(iso(-1)), "badge badge--danger", "terlambat = danger");
+assert.strictEqual(dash.dashBadgeClass(iso(2)), "badge badge--warning", "<= 3 hari = warning");
+assert.strictEqual(dash.dashBadgeClass(iso(10)), "badge badge--info", "> 3 hari = info");
+assert.strictEqual(dash.dashBadgeClass(""), "badge", "tanpa deadline = neutral");
+
+// --- Format Hari & Tanggal Hari Ini ---
+const fixedDate = new Date("2026-11-04T10:00:00"); // Hari Rabu
+assert.strictEqual(dash.dashTodayDayName(fixedDate), "Rabu");
+assert.strictEqual(dash.dashTodayFormatted(fixedDate), "Rabu, 4 November 2026");
+
+console.log("dashboard.test.js lulus: format tanggal, sisa hari, nama matkul, escaping, empty state, badge class, hari ini.");

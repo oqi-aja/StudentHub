@@ -1,62 +1,142 @@
-<section class="page-section">
+<section class="page-section" id="page-daftar">
   <header class="page-header">
     <h2 class="page-title">Daftar Tugas</h2>
-    <p class="page-subtitle">Semua tugas milikmu</p>
+    <p class="page-subtitle">Tugas mata kuliah & status pengumpulan</p>
   </header>
 
+  <!-- Filter & search -->
   <div class="card">
     <div class="card-body">
       <div class="form">
         <div class="form-field">
-          <label class="label" for="search-task">Cari tugas</label>
-          <input id="search-task" class="input" type="search" placeholder="Cari judul, mata kuliah, dosen...">
+          <label class="label" for="dt-search">Cari tugas</label>
+          <input id="dt-search" class="input" type="search" placeholder="Cari judul, dosen, mata kuliah..." data-search>
         </div>
         <div class="grid two">
           <div class="form-field">
-            <label class="label" for="filter-status">Status</label>
-            <select id="filter-status" class="select">
+            <label class="label" for="dt-filter-status">Status</label>
+            <select id="dt-filter-status" class="select" data-filter-status>
               <option value="">Semua status</option>
-              <option>Belum dikerjakan</option>
-              <option>Sedang dikerjakan</option>
-              <option>Selesai</option>
-              <option>Terlambat</option>
+              <option value="belum">🟡 Belum dikumpulkan</option>
+              <option value="sudah">🟢 Sudah dikumpulkan</option>
+              <option value="terlambat">🔴 Terlambat</option>
             </select>
           </div>
           <div class="form-field">
-            <label class="label" for="filter-course">Mata kuliah</label>
-            <select id="filter-course" class="select">
-              <option value="">Semua mata kuliah</option>
-              <option>Pemrograman Web</option>
-              <option>Basis Data</option>
-              <option>Jaringan Komputer</option>
-            </select>
+            <label class="label" for="dt-filter-course">Mata kuliah</label>
+            <select id="dt-filter-course" class="select" data-filter-course></select>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="list">
-    <article class="list-item">
-      <div class="list-item-main">
-        <a class="list-item-title" href="#detail-tugas">Membuat Website</a>
-        <span class="list-item-subtitle">Pemrograman Web • Dosen: Pak A • Deadline: 10 Oktober 2026</span>
-      </div>
-      <span class="badge badge--warning">Sedang dikerjakan</span>
-    </article>
-    <article class="list-item">
-      <div class="list-item-main">
-        <a class="list-item-title" href="#detail-tugas">Membuat Database</a>
-        <span class="list-item-subtitle">Basis Data • Dosen: Bu B • Deadline: 15 Oktober 2026</span>
-      </div>
-      <span class="badge">Belum dikerjakan</span>
-    </article>
-    <article class="list-item">
-      <div class="list-item-main">
-        <a class="list-item-title" href="#detail-tugas">Laporan Jaringan</a>
-        <span class="list-item-subtitle">Jaringan Komputer • Dosen: Pak C • Deadline: 20 Oktober 2026</span>
-      </div>
-      <span class="badge badge--success">Selesai</span>
-    </article>
+  <!-- Header daftar: counter + tombol tambah + tombol status mahasiswa (PJ/Admin) -->
+  <div class="daftar-header">
+    <span class="card-meta" data-count></span>
+    <div class="daftar-header-actions">
+      <button class="button button--ghost button--sm" type="button" data-open-matrix hidden>📊 Status Mahasiswa</button>
+      <button class="button button--sm" type="button" data-open hidden>+ Tambah Tugas</button>
+    </div>
   </div>
+
+  <!-- List tugas (diisi dinamis, dengan grouping per topic) -->
+  <div class="task-list" data-list></div>
+
+  <!-- Overlay + sheet untuk form tambah/edit tugas -->
+  <div class="fm-overlay" data-overlay hidden></div>
+
+  <section class="fm-sheet" data-sheet role="dialog" aria-modal="true" aria-labelledby="dt-sheet-title" hidden>
+    <header class="fm-sheet-head">
+      <h3 class="fm-sheet-title" id="dt-sheet-title" data-sheet-title>Tambah Tugas</h3>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
+    </header>
+    <div class="fm-sheet-body">
+      <form class="form" data-form novalidate>
+        <div class="form-field">
+          <label class="label" for="dt-title">Nama Tugas</label>
+          <input class="input" id="dt-title" name="title" type="text" placeholder="mis. Tugas 1 - Algoritma" required>
+        </div>
+        <div class="grid two">
+          <div class="form-field">
+            <label class="label" for="dt-course">Mata Kuliah</label>
+            <select class="select" id="dt-course" name="course_id" required>
+              <option value="">Pilih mata kuliah</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="label" for="dt-dosen">Dosen</label>
+            <input class="input" id="dt-dosen" name="dosen" type="text" placeholder="mis. Pak Budi" required>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="form-field">
+            <label class="label" for="dt-deadline">Deadline</label>
+            <input class="input" id="dt-deadline" name="deadline" type="date" required>
+          </div>
+          <div class="form-field">
+            <label class="label" for="dt-topic">Topik</label>
+            <input class="input" id="dt-topic" name="topic" type="text" placeholder="mis. Pertemuan 1 (opsional)">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="label">Folder Pengumpulan</label>
+          <div class="folder-picker" data-folder-picker></div>
+          <p class="fm-hint">Folder tempat mahasiswa mengumpulkan tugas. Pilih dari struktur folder yang ada di Page Tugas.</p>
+        </div>
+        <div class="form-field">
+          <label class="label" for="dt-desc">Deskripsi / Instruksi</label>
+          <textarea class="textarea" id="dt-desc" name="description" placeholder="Instruksi tugas..."></textarea>
+        </div>
+        <div class="form-field">
+          <label class="label">Lampiran Materi (opsional)</label>
+          <div class="attachment-list" data-attachment-list></div>
+          <button class="button button--ghost button--sm" type="button" data-add-materi>+ Tambah Materi</button>
+          <p class="fm-hint">File materi dari dosen/PJ yang ditampilkan ke mahasiswa.</p>
+        </div>
+        <p class="form-error" data-error role="alert"></p>
+      </form>
+    </div>
+    <footer class="fm-sheet-foot">
+      <button class="button button--ghost" type="button" data-cancel>Batal</button>
+      <button class="button" type="button" data-save>Simpan</button>
+    </footer>
+  </section>
+
+  <!-- Sheet 2: List Mahasiswa per tugas (PJ/Admin only) -->
+  <section class="fm-sheet" data-sheet-students role="dialog" aria-modal="true" aria-labelledby="dt-students-title" hidden>
+    <header class="fm-sheet-head">
+      <h3 class="fm-sheet-title" id="dt-students-title" data-students-title>Status Pengumpulan</h3>
+      <button class="icon-btn" type="button" data-students-close aria-label="Tutup">✕</button>
+    </header>
+    <div class="fm-sheet-body">
+      <div class="students-summary" data-students-summary></div>
+      <div class="students-list" data-students-list></div>
+    </div>
+    <footer class="fm-sheet-foot">
+      <button class="button button--ghost" type="button" data-students-close>Tutup</button>
+      <button class="button button--sm" type="button" data-export-task-csv>📥 Ekspor CSV</button>
+    </footer>
+  </section>
+
+  <!-- Sheet 3: Status Matrix (PJ/Admin only, cross-task overview) -->
+  <section class="fm-sheet" data-sheet-matrix role="dialog" aria-modal="true" aria-labelledby="dt-matrix-title" hidden>
+    <header class="fm-sheet-head">
+      <h3 class="fm-sheet-title" id="dt-matrix-title" data-matrix-title>Status Mahasiswa per Tugas</h3>
+      <button class="icon-btn" type="button" data-matrix-close aria-label="Tutup">✕</button>
+    </header>
+    <div class="fm-sheet-body">
+      <div class="matrix-wrap" data-matrix-wrap></div>
+    </div>
+    <footer class="fm-sheet-foot">
+      <button class="button button--ghost" type="button" data-matrix-close>Tutup</button>
+      <button class="button button--sm" type="button" data-export-matrix-csv>📥 Ekspor Matriks CSV</button>
+    </footer>
+  </section>
+
+  <!-- Hidden file inputs -->
+  <input id="dt-materi-input" type="file" hidden>
+  <input id="dt-submit-input" type="file" hidden>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
 </section>
