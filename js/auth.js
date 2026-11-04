@@ -385,7 +385,7 @@ function createAccount(input) {
     ? ' (mock only — belum terdaftar di Supabase Auth)'
     : '';
   return { ok: true, account: { ...account, password: undefined },
-    message: `✓ Akun ${account.name} berhasil dibuat sebagai ${ROLE_LABELS[account.role]}.${note}` };
+    message: `Akun ${account.name} berhasil dibuat sebagai ${ROLE_LABELS[account.role]}.${note}` };
 }
 
 function updateAccount(id, input) {
@@ -400,7 +400,7 @@ function updateAccount(id, input) {
   const account = { id, ...v.account };
   MOCK_ACCOUNTS[index] = account;
   persistAccounts();
-  return { ok: true, account: { ...account, password: undefined }, message: `✓ Akun ${account.name} berhasil diperbarui.` };
+  return { ok: true, account: { ...account, password: undefined }, message: `Akun ${account.name} berhasil diperbarui.` };
 }
 
 function deleteAccount(id) {
@@ -410,7 +410,7 @@ function deleteAccount(id) {
   if (currentUser && currentUser.id === id) return { ok: false, error: 'Akun yang sedang dipakai tidak bisa dihapus dari sini.' };
   const [removed] = MOCK_ACCOUNTS.splice(index, 1);
   persistAccounts();
-  return { ok: true, message: `✓ Akun ${removed.name} (${removed.username}) berhasil dihapus.` };
+  return { ok: true, message: `Akun ${removed.name} (${removed.username}) berhasil dihapus.` };
 }
 
 // ---------- Public sync getters ----------

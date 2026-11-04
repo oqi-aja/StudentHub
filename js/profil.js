@@ -50,9 +50,9 @@ function initProfilPage() {
       return;
     }
     if (Notification.permission === 'granted') {
-      if (notifStatus) notifStatus.textContent = '✓ Pengingat aktif (H-1 & kuliah)';
+      if (notifStatus) notifStatus.textContent = 'Pengingat aktif (H-1 & kuliah)';
       if (notifBtn) {
-        notifBtn.textContent = '✓ Aktif';
+        notifBtn.textContent = 'Aktif';
         notifBtn.disabled = true;
       }
     } else if (Notification.permission === 'denied') {
@@ -60,7 +60,7 @@ function initProfilPage() {
       if (notifBtn) notifBtn.disabled = true;
     } else {
       if (notifStatus) notifStatus.textContent = 'Klik untuk aktifkan pengingat.';
-      if (notifBtn) notifBtn.textContent = '🔔 Aktifkan';
+      if (notifBtn) notifBtn.textContent = 'Aktifkan';
     }
   };
   updateNotifStatus();

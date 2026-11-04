@@ -195,12 +195,12 @@
 
   function statusBadge(status) {
     if (status.state === 'sudah') {
-      return '<span class="badge badge--success">🟢 Sudah dikumpulkan</span>';
+      return '<span class="badge badge--success"><span class="status-dot status-dot--success"></span>Sudah dikumpulkan</span>';
     }
     if (status.state === 'terlambat') {
-      return '<span class="badge badge--danger">🔴 Terlambat ' + Math.abs(status.daysLeft) + ' hari</span>';
+      return '<span class="badge badge--danger"><span class="status-dot status-dot--danger"></span>Terlambat ' + Math.abs(status.daysLeft) + ' hari</span>';
     }
-    return '<span class="badge badge--warning">🟡 Belum dikumpulkan</span>';
+    return '<span class="badge badge--warning"><span class="status-dot status-dot--warning"></span>Belum dikumpulkan</span>';
   }
 
   // ---------- Find submitted file info ----------
@@ -220,27 +220,17 @@
     const arr = Array.isArray(attachments) ? attachments : [];
     if (!arr.length) return '';
     return '<div class="task-card-materi">'
-      + '<span class="list-item-subtitle">📎 Materi:</span>'
+      + '<span class="list-item-subtitle">Materi:</span>'
       + '<div class="materi-list">'
       + arr.map((a) => '<span class="materi-chip" title="' + escape(a.file_type) + '">'
-        + fileIcon(a.name, a.file_type) + ' '
+        + fileIcon()
         + '<span class="materi-name">' + escape(a.name) + '</span>'
         + '</span>').join('')
       + '</div></div>';
   }
 
-  function fileIcon(name, type) {
-    const ext = (String(name || '').split('.').pop() || '').toLowerCase();
-    if (['zip', 'rar', '7z'].includes(ext)) return '📦';
-    if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '🖼️';
-    if (['doc', 'docx', 'odt'].includes(ext)) return '📝';
-    if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
-    if (['ppt', 'pptx'].includes(ext)) return '📽️';
-    if (['pdf'].includes(ext)) return '📄';
-    if (['mp3', 'wav'].includes(ext)) return '🎵';
-    if (['mp4', 'mkv', 'mov'].includes(ext)) return '🎬';
-    if (['txt', 'md'].includes(ext)) return '📃';
-    return '📄';
+  function fileIcon() {
+    return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;margin-right:4px;"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>';
   }
 
   // ---------- Filtering ----------
@@ -351,7 +341,7 @@
   }
 
   function renderTopicGroup(group, me) {
-    const topicLabel = group.topic === 'Umum' ? '📌 Umum' : '📁 ' + escape(group.topic);
+    const topicLabel = group.topic === 'Umum' ? 'Umum' : escape(group.topic);
     return '<details class="topic-group" open>'
       + '<summary class="topic-group-summary">'
         + '<span class="topic-group-label">' + topicLabel + '</span>'
@@ -380,27 +370,27 @@
     let actionButtons = '';
     if (isMahasiswa) {
       actionButtons = '<div class="task-card-actions">'
-        + '<a class="button button--ghost button--sm" href="#detail-tugas?id=' + Number(t.id) + '">📋 Detail</a>';
+        + '<a class="button button--ghost button--sm" href="#detail-tugas?id=' + Number(t.id) + '">Detail</a>';
       if (status && status.state === 'sudah') {
         // Already submitted — show file info + Lihat File + Unggah Ulang
-        actionButtons += '<button class="button button--ghost button--sm" type="button" data-lihat-file="' + Number(t.id) + '">👁️ Lihat File</button>'
-          + '<button class="button button--ghost button--sm" type="button" data-unggah-ulang="' + Number(t.id) + '">↻ Unggah Ulang</button>';
+        actionButtons += '<button class="button button--ghost button--sm" type="button" data-lihat-file="' + Number(t.id) + '">Lihat File</button>'
+          + '<button class="button button--ghost button--sm" type="button" data-unggah-ulang="' + Number(t.id) + '">Unggah Ulang</button>';
       } else {
         // Not submitted — Kumpulkan Tugas + Buka Folder
-        actionButtons += '<button class="button button--sm" type="button" data-kumpulkan="' + Number(t.id) + '">📤 Kumpulkan Tugas</button>';
+        actionButtons += '<button class="button button--sm" type="button" data-kumpulkan="' + Number(t.id) + '">Kumpulkan Tugas</button>';
       }
-      actionButtons += '<a class="button button--ghost button--sm" href="#tugas?folder=' + Number(t.submission_folder_id) + '">📁 Buka Folder</a>'
+      actionButtons += '<a class="button button--ghost button--sm" href="#tugas?folder=' + Number(t.submission_folder_id) + '">Buka Folder</a>'
         + '</div>';
     } else if (canEdit) {
       actionButtons = '<div class="task-card-actions">'
-        + '<a class="button button--ghost button--sm" href="#detail-tugas?id=' + Number(t.id) + '">📋 Detail</a>'
-        + '<button class="button button--ghost button--sm" type="button" data-edit="' + Number(t.id) + '">✎ Edit</button>'
-        + '<button class="button button--ghost button--sm" type="button" data-delete="' + Number(t.id) + '" aria-label="Hapus">🗑</button>'
-        + '<a class="button button--ghost button--sm" href="#tugas?folder=' + Number(t.submission_folder_id) + '">📁 Buka Folder</a>'
+        + '<a class="button button--ghost button--sm" href="#detail-tugas?id=' + Number(t.id) + '">Detail</a>'
+        + '<button class="button button--ghost button--sm" type="button" data-edit="' + Number(t.id) + '">Edit</button>'
+        + '<button class="button button--ghost button--sm" type="button" data-delete="' + Number(t.id) + '" aria-label="Hapus">Hapus</button>'
+        + '<a class="button button--ghost button--sm" href="#tugas?folder=' + Number(t.submission_folder_id) + '">Buka Folder</a>'
         + '</div>';
     } else if (me && me.role === 'pj') {
       actionButtons = '<div class="task-card-actions">'
-        + '<a class="button button--ghost button--sm" href="#detail-tugas?id=' + Number(t.id) + '">📋 Detail</a>'
+        + '<a class="button button--ghost button--sm" href="#detail-tugas?id=' + Number(t.id) + '">Detail</a>'
         + '<span class="card-meta">read-only</span>'
         + '</div>';
     }
@@ -409,9 +399,9 @@
     let submittedFileInfo = '';
     if (isMahasiswa && submittedFile) {
       submittedFileInfo = '<div class="task-card-submitted">'
-        + '<span class="list-item-subtitle">📄 File terkumpul:</span>'
+        + '<span class="list-item-subtitle">File terkumpul:</span>'
         + '<div class="submitted-file-row">'
-          + '<span class="submitted-file-name">' + fileIcon(submittedFile.file.name, submittedFile.file.file_type) + ' ' + escape(submittedFile.file.name) + '</span>'
+          + '<span class="submitted-file-name">' + fileIcon() + escape(submittedFile.file.name) + '</span>'
           + '<span class="submitted-file-time">' + escape(formatDateTime(submittedFile.submission.updated_at || submittedFile.submission.submitted_at)) + '</span>'
         + '</div></div>';
     }
@@ -423,7 +413,7 @@
     let pjCounter = '';
     if (isPjOrAdmin && canEdit) {
       pjCounter = '<div class="task-card-pj-counter" data-pj-counter="' + Number(t.id) + '">'
-        + '<span class="card-meta">⏳ Memuat status...</span>'
+        + '<span class="card-meta">Memuat status...</span>'
         + '</div>';
     }
 
@@ -431,23 +421,23 @@
       + '<div class="task-card-main">'
         + '<h3 class="task-card-title">' + escape(t.title) + '</h3>'
         + '<div class="task-card-meta">'
-          + '<span>📚 ' + escape(course) + '</span>'
-          + '<span>👤 ' + escape(t.dosen || '-') + '</span>'
-          + '<span>📅 ' + escape(formatDate(t.deadline)) + '</span>'
-          + (t.topic ? '<span>📁 ' + escape(t.topic) + '</span>' : '')
+          + '<span>' + escape(course) + '</span>'
+          + '<span>' + escape(t.dosen || '-') + '</span>'
+          + '<span>' + escape(formatDate(t.deadline)) + '</span>'
+          + (t.topic ? '<span>' + escape(t.topic) + '</span>' : '')
         + '</div>'
         + (t.description ? '<p class="task-card-desc">' + escape(t.description) + '</p>' : '')
         + materiHtml
         + submittedFileInfo
         + pjCounter
         + '<div class="task-card-folder">'
-          + '<span class="list-item-subtitle">📂 Dikumpulkan di:</span>'
+          + '<span class="list-item-subtitle">Dikumpulkan di:</span>'
           + '<span class="task-card-folder-path">' + escape(folderPath(t.submission_folder_id)) + '</span>'
         + '</div>'
       + '</div>'
       + '<div class="task-card-side">'
         + (isMahasiswa && status ? statusBadge(status) : '')
-        + (isPjOrAdmin ? '<span class="badge badge--info">' + (canEdit ? '✎ Kelola' : '👁️ Lihat') + '</span>' : '')
+        + (isPjOrAdmin ? '<span class="badge badge--info">' + (canEdit ? 'Kelola' : 'Lihat') + '</span>' : '')
         + actionButtons
       + '</div>'
     + '</article>';
@@ -536,7 +526,7 @@
       return '<div class="attachment-row">'
         + '<span class="attachment-icon">' + fileIcon(a.name, a.file_type) + '</span>'
         + '<span class="attachment-name">' + escape(a.name) + '</span>'
-        + '<button class="icon-btn" type="button" data-remove-materi="' + i + '" aria-label="Hapus materi">✕</button>'
+        + '<button class="icon-btn" type="button" data-remove-materi="' + i + '" aria-label="Hapus materi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>'
         + '</div>';
     }).join('');
   }
@@ -562,7 +552,7 @@
       return '<div class="folder-picker-node">'
         + '<label class="folder-picker-row' + (isSel ? ' is-selected' : '') + '" style="' + indent + '">'
           + '<input type="radio" name="submission_folder_id" value="' + folder.id + '" ' + (isSel ? 'checked' : '') + '>'
-          + '<span class="folder-picker-icon">' + (depth === 0 ? '📂' : '📁') + '</span>'
+          + '<span class="folder-picker-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>'
           + '<span class="folder-picker-name">' + escape(folder.name) + '</span>'
         + '</label>'
         + childHtml
@@ -611,7 +601,7 @@
 
       closeForm();
       render();
-      showToast(editingTaskId === null ? '✓ Tugas dibuat.' : '✓ Tugas diperbarui.');
+      showToast(editingTaskId === null ? 'Tugas dibuat.' : 'Tugas diperbarui.');
       // Refresh PJ counters
       loadPjCounters();
     } catch (e) {
@@ -636,7 +626,7 @@
       const fresh = await api.loadAll();
       data = fresh;
       render();
-      showToast('✓ Tugas dihapus.');
+      showToast('Tugas dihapus.');
     } catch (e) {
       showToast('Gagal menghapus: ' + (e && e.message ? e.message : 'unknown error'));
     }
@@ -663,7 +653,7 @@
     const api = window.SH_API;
     if (!api) return;
 
-    showToast('⏳ Mengunggah...');
+    showToast('Mengunggah...');
     try {
       const res = await api.submitTaskFile(taskId, file);
       if (!res.ok) {
@@ -674,7 +664,7 @@
       const fresh = await api.loadAll();
       data = fresh;
       render();
-      showToast('✓ Tugas "' + res.task.title + '" berhasil dikumpulkan!');
+      showToast('Tugas "' + res.task.title + '" berhasil dikumpulkan!');
     } catch (e) {
       showToast('Gagal upload: ' + (e && e.message ? e.message : 'unknown error'));
     }
@@ -715,7 +705,7 @@
       return;
     }
     // Mock mode: tidak ada URL nyata — tampilkan info di toast
-    showToast('📄 ' + file.name + ' · ' + (file.file_type || 'unknown') + ' · ' + (file.size ? Math.round(file.size / 1024) + ' KB' : '-'));
+    showToast(file.name + ' · ' + (file.file_type || 'unknown') + ' · ' + (file.size ? Math.round(file.size / 1024) + ' KB' : '-'));
   }
 
   // ---------- Materi upload (admin/PJ) ----------
@@ -739,7 +729,7 @@
     const api = window.SH_API;
     if (!api) return;
 
-    showToast('⏳ Mengunggah materi...');
+    showToast('Mengunggah materi...');
     try {
       const res = await api.attachMateriToTask(editingTaskId, file);
       if (!res.ok) {
@@ -751,7 +741,7 @@
       // Reload cache supaya card menampilkan materi baru saat render
       const fresh = await api.loadAll();
       data = fresh;
-      showToast('✓ Materi ditambahkan.');
+      showToast('Materi ditambahkan.');
     } catch (e) {
       showToast('Gagal: ' + (e && e.message ? e.message : 'unknown'));
     }
@@ -772,7 +762,7 @@
       renderAttachmentList();
       const fresh = await api.loadAll();
       data = fresh;
-      showToast('✓ Materi dihapus.');
+      showToast('Materi dihapus.');
     } catch (e) {
       showToast('Gagal: ' + (e && e.message ? e.message : 'unknown'));
     }
@@ -797,10 +787,10 @@
         const submitted = stats.submitted;
         const late = stats.late;
         const notSub = stats.not_submitted;
-        el.innerHTML = '<span class="badge badge--info">👥 ' + submitted + '/' + total + ' sudah submit</span>'
+        el.innerHTML = '<span class="badge badge--info">' + submitted + '/' + total + ' sudah submit</span>'
           + (late > 0 ? ' <span class="badge badge--danger">' + late + ' terlambat</span>' : '')
           + (notSub > 0 ? ' <span class="badge badge--warning">' + notSub + ' belum</span>' : '')
-          + ' <button class="button button--ghost button--sm" type="button" data-list-mahasiswa="' + Number(taskId) + '">📋 List</button>';
+          + ' <button class="button button--ghost button--sm" type="button" data-list-mahasiswa="' + Number(taskId) + '">List</button>';
       } catch (e) {
         el.innerHTML = '<span class="card-meta">Gagal memuat</span>';
       }
@@ -821,7 +811,7 @@
     const listEl = root.querySelector('[data-students-list]');
 
     titleEl.textContent = 'Status Pengumpulan';
-    summaryEl.innerHTML = '<p class="card-meta">⏳ Memuat...</p>';
+    summaryEl.innerHTML = '<p class="card-meta">Memuat...</p>';
     listEl.innerHTML = '';
     root.querySelector('[data-overlay]').hidden = false;
     sheet.hidden = false;
@@ -846,14 +836,18 @@
         return;
       }
 
-      listEl.innerHTML = '<table class="students-table"><thead><tr>'
+      listEl.innerHTML = '<div class="table-scroll"><table class="students-table"><thead><tr>'
         + '<th>#</th><th>Nama</th><th>Status</th><th>File</th><th>Waktu</th>'
         + '</tr></thead><tbody>'
         + stats.students.map((s, i) => {
           const file = s.submission
             ? ((data.files || []).find((f) => String(f.id) === String(s.submission.file_id)) || null)
             : null;
-          const badge = s.status === 'sudah' ? '🟢 Sudah' : (s.status === 'terlambat' ? '🔴 Terlambat' : '🟡 Belum');
+          const badge = s.status === 'sudah'
+            ? '<span class="badge badge--success"><span class="status-dot status-dot--success"></span>Sudah</span>'
+            : (s.status === 'terlambat'
+              ? '<span class="badge badge--danger"><span class="status-dot status-dot--danger"></span>Terlambat</span>'
+              : '<span class="badge badge--warning"><span class="status-dot status-dot--warning"></span>Belum</span>');
           return '<tr>'
             + '<td>' + (i + 1) + '</td>'
             + '<td>' + escape(s.profile.name) + '</td>'
@@ -862,7 +856,7 @@
             + '<td>' + (s.submission ? escape(formatDateTime(s.submission.updated_at || s.submission.submitted_at)) : '-') + '</td>'
           + '</tr>';
         }).join('')
-        + '</tbody></table>';
+        + '</tbody></table></div>';
     } catch (e) {
       summaryEl.innerHTML = '<p class="card-meta">Gagal memuat: ' + (e && e.message ? e.message : 'unknown') + '</p>';
     }
@@ -893,7 +887,7 @@
 
     const sheet = root.querySelector('[data-sheet-matrix]');
     const wrap = root.querySelector('[data-matrix-wrap]');
-    wrap.innerHTML = '<p class="card-meta">⏳ Memuat...</p>';
+    wrap.innerHTML = '<p class="card-meta">Memuat...</p>';
     root.querySelector('[data-overlay]').hidden = false;
     sheet.hidden = false;
     document.body.classList.add('is-locked');
@@ -942,15 +936,15 @@
             const tid = String(t.id);
             const st = matrix[sid] && matrix[sid][tid];
             let badge = '—';
-            if (st === 'sudah') badge = '🟢';
-            else if (st === 'terlambat') badge = '🔴';
-            else if (st === 'belum') badge = '🟡';
-            return '<td class="matrix-cell" title="' + escape(st || '') + '">' + badge + '</td>';
+            if (st === 'sudah') badge = '<span class="status-dot status-dot--success" title="Sudah dikumpulkan"></span>';
+            else if (st === 'terlambat') badge = '<span class="status-dot status-dot--danger" title="Terlambat"></span>';
+            else if (st === 'belum') badge = '<span class="status-dot status-dot--warning" title="Belum dikumpulkan"></span>';
+            return '<td class="matrix-cell">' + badge + '</td>';
           }).join('')
         + '</tr>';
       });
       html += '</tbody></table>';
-      html += '<p class="fm-hint">🟢 = sudah · 🟡 = belum · 🔴 = terlambat</p>';
+      html += '<p class="fm-hint"><span class="status-dot status-dot--success"></span> Sudah &nbsp;&nbsp; <span class="status-dot status-dot--warning"></span> Belum &nbsp;&nbsp; <span class="status-dot status-dot--danger"></span> Terlambat</p>';
       wrap.innerHTML = html;
     } catch (e) {
       wrap.innerHTML = '<p class="card-meta">Gagal memuat: ' + (e && e.message ? e.message : 'unknown') + '</p>';

@@ -301,38 +301,21 @@ function stripFormat(input) {
     .replace(/\*/g, '');
 }
 
-const EMPTY_STATES = {
-  catatan: {
-    icon: '💡',
-    title: 'Belum ada catatan',
-    subtitle: 'Mulai dengan membuat catatan pertama Anda'
-  },
-  tersemat: {
-    icon: '📌',
-    title: 'Tidak ada catatan yang disematkan',
-    subtitle: 'Sematkan catatan penting agar mudah ditemukan'
-  },
-  pengingat: {
-    icon: '🔔',
-    title: 'Tidak ada pengingat aktif',
-    subtitle: 'Atur pengingat pada catatan untuk melihatnya di sini'
-  },
-  label: {
-    icon: '🏷️',
-    title: 'Tidak ada catatan dengan label ini',
-    subtitle: 'Tambahkan label ke catatan untuk mengelompokkannya'
-  },
-  arsip: {
-    icon: '📥',
-    title: 'Arsip kosong',
-    subtitle: 'Catatan yang diarsipkan akan muncul di sini'
-  },
-  sampah: {
-    icon: '🗑️',
-    title: 'Sampah kosong',
-    subtitle: 'Catatan yang dihapus akan masuk ke Sampah'
-  }
+// Inline SVG icon set — seluruh ikon UI memakai SVG, tanpa emoji.
+const ICON_PATHS = {
+  lamp: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
+  pin: '<path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  dots: '<circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>'
 };
+
+function ico(name, className) {
+  return '<svg class="' + (className || 'ico') + '" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (ICON_PATHS[name] || '') + '</svg>';
+}
 
 const FORMAT_MARKERS = {
   bold: ['**', '**'],
@@ -457,7 +440,7 @@ function initCatatanPage() {
       b.type = 'button';
       b.className = 'catatan-nav-item';
       b.dataset.nav = 'label:' + lbl;
-      b.innerHTML = '<span class="catatan-nav-ico">🏷️</span><span class="catatan-nav-text">' + escapeHtml(lbl) + '</span>';
+      b.innerHTML = '<span class="catatan-nav-ico">' + ico('tag') + '</span><span class="catatan-nav-text">' + escapeHtml(lbl) + '</span>';
       els.sidebarLabels.appendChild(b);
     });
   }
@@ -470,7 +453,7 @@ function initCatatanPage() {
     const safeImage = note.image && String(note.image).startsWith('data:image/') ? escapeHtml(note.image) : '';
     const trashed = Boolean(note.isDeleted);
     const chips = [];
-    if (note.reminder) chips.push('<span class="note-chip">🔔 ' + escapeHtml(formatReminderLabel(note.reminder)) + '</span>');
+    if (note.reminder) chips.push('<span class="note-chip">' + ico('bell', 'note-chip-ico') + escapeHtml(formatReminderLabel(note.reminder)) + '</span>');
     (note.labels || []).slice(0, 3).forEach(function (lbl) { chips.push('<span class="note-chip">' + escapeHtml(lbl) + '</span>'); });
     const meta = trashed ? 'Di Sampah' : (note.isArchived ? 'Diarsipkan' : '');
     const menuItems = trashed
@@ -484,9 +467,9 @@ function initCatatanPage() {
       <div class="note-card-preview">${escapeHtml((note.content || '').substring(0, 160))}</div>
       ${chips.length ? `<div class="note-card-chips">${chips.join('')}</div>` : ''}
       <div class="note-card-meta">${meta}</div>
-      <button class="icon-btn note-card-actions" type="button" data-card-pin title="Sematkan" ${trashed ? 'hidden' : ''}>📌</button>
+      <button class="icon-btn note-card-actions" type="button" data-card-pin title="Sematkan" aria-label="Sematkan catatan" ${trashed ? 'hidden' : ''}>${ico('pin')}</button>
       <div class="catatan-menu-wrap">
-        <button class="icon-btn note-card-menu-btn" type="button" data-card-menu-btn title="Lainnya" aria-label="Lainnya">⋮</button>
+        <button class="icon-btn note-card-menu-btn" type="button" data-card-menu-btn title="Lainnya" aria-label="Lainnya">${ico('dots')}</button>
         <div class="catatan-menu" data-card-menu hidden>${menuItems}</div>
       </div>`;
     card.addEventListener('click', function () { openEditor(note); });
@@ -615,7 +598,7 @@ function initCatatanPage() {
   }
   function showEditedTime() {
     if (!state.selectedNote) return;
-    setStatus(formatEditedTime(state.selectedNote.updated_at) || 'Tersimpan ✓');
+    setStatus(formatEditedTime(state.selectedNote.updated_at) || 'Tersimpan');
   }
 
   function autosizeContent() {
@@ -723,15 +706,15 @@ function initCatatanPage() {
     els.editor.chips.innerHTML = '';
     const note = state.selectedNote;
     if (!note) return;
-    const add = function (text) {
+    const add = function (html) {
       const span = document.createElement('span');
       span.className = 'note-chip';
-      span.textContent = text;
+      span.innerHTML = html;
       els.editor.chips.appendChild(span);
     };
-    (note.labels || []).forEach(function (lbl) { add('🏷️ ' + lbl); });
-    if (note.reminder) add('🔔 ' + formatReminderLabel(note.reminder));
-    (note.collaborators || []).forEach(function (u) { add('👤 ' + u); });
+    (note.labels || []).forEach(function (lbl) { add(ico('tag', 'note-chip-ico') + escapeHtml(lbl)); });
+    if (note.reminder) add(ico('bell', 'note-chip-ico') + escapeHtml(formatReminderLabel(note.reminder)));
+    (note.collaborators || []).forEach(function (u) { add(ico('user', 'note-chip-ico') + escapeHtml(u)); });
   }
 
   function openEditor(note) {
@@ -976,7 +959,7 @@ function initCatatanPage() {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'popover-label-item' + (active.includes(lbl) ? ' is-active' : '');
-      b.innerHTML = '<span>' + escapeHtml(lbl) + '</span><span>' + (active.includes(lbl) ? '✓' : '') + '</span>';
+      b.innerHTML = '<span>' + escapeHtml(lbl) + '</span><span>' + (active.includes(lbl) ? ico('check', 'popover-check') : '') + '</span>';
       b.onclick = function () {
         if (!state.selectedNote) return;
         const cur = Array.isArray(state.selectedNote.labels) ? state.selectedNote.labels.slice() : [];
@@ -1067,7 +1050,7 @@ function initCatatanPage() {
       del.className = 'icon-btn';
       del.title = 'Hapus label';
       del.setAttribute('aria-label', 'Hapus label ' + lbl);
-      del.textContent = '✕';
+      del.innerHTML = ico('x');
       del.onclick = function () {
         state.labels = state.labels.filter(x => x !== lbl);
         persistLabels(state.labels);

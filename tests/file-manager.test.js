@@ -67,8 +67,8 @@ assert.deepStrictEqual(names(api.fmSearch('zzz')), []);
 
 // Metadata dan ikon.
 assert.strictEqual(api.fmMeta(api.fmChildren(1)[0]), '3 item');
-assert.strictEqual(api.fmIcon({ type: 'file', name: 'Project-Akhir.zip' }), '📦');
-assert.strictEqual(api.fmIcon({ type: 'task', name: 'x' }), '📌');
+assert.ok(api.fmIcon({ type: 'file', name: 'Project-Akhir.zip' }).includes('<svg'));
+assert.ok(api.fmIcon({ type: 'task', name: 'x' }).includes('<svg'));
 
 const folderPemrograman = api.fmFind('folder', 2);
 const fileOqi = api.fmFind('file', 1);   // visibility public

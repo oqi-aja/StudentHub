@@ -1,16 +1,16 @@
 <section class="page-section fm">
   <header class="fm-appbar">
-    <button class="icon-btn" type="button" id="fm-back" aria-label="Kembali ke folder sebelumnya">←</button>
+    <button class="icon-btn" type="button" id="fm-back" aria-label="Kembali ke folder sebelumnya"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
     <h2 class="fm-title" id="fm-title">Tugas</h2>
-    <button class="icon-btn" type="button" id="fm-search-toggle" aria-label="Cari" aria-expanded="false">🔍</button>
-    <button class="icon-btn" type="button" id="fm-add" aria-label="Tambah folder atau file">＋</button>
+    <button class="icon-btn" type="button" id="fm-search-toggle" aria-label="Cari" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <button class="icon-btn" type="button" id="fm-add" aria-label="Tambah folder atau file"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
   </header>
 
   <nav class="fm-breadcrumb" id="fm-breadcrumb" aria-label="Lokasi folder"></nav>
 
   <div class="fm-searchbar" id="fm-searchbar" hidden>
     <input class="input" id="fm-search-input" type="search" placeholder="Cari file, folder, atau tugas..." autocomplete="off">
-    <button class="icon-btn" type="button" id="fm-search-close" aria-label="Tutup pencarian">✕</button>
+    <button class="icon-btn" type="button" id="fm-search-close" aria-label="Tutup pencarian"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
   </div>
 
   <div class="fm-toolbar">
@@ -24,22 +24,22 @@
         <option value="size">Ukuran</option>
       </select>
       <div class="segmented" role="group" aria-label="Mode tampilan">
-        <button class="segmented-btn" type="button" data-view="list" aria-label="Tampilan daftar">☷</button>
-        <button class="segmented-btn" type="button" data-view="grid" aria-label="Tampilan grid">▦</button>
+        <button class="segmented-btn" type="button" data-view="list" aria-label="Tampilan daftar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></button>
+        <button class="segmented-btn" type="button" data-view="grid" aria-label="Tampilan grid"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
       </div>
     </div>
   </div>
 
   <div class="fm-items" id="fm-items"></div>
 
-  <p class="fm-hint">Ketuk <span aria-hidden="true">⋮</span> pada item untuk melihat menu aksi.</p>
+  <p class="fm-hint">Gunakan tombol menu pada item untuk melihat aksi yang tersedia.</p>
 
   <div class="fm-overlay" id="fm-overlay" hidden></div>
 
   <section class="fm-sheet" id="fm-sheet" role="dialog" aria-modal="true" aria-labelledby="fm-sheet-title" hidden>
     <header class="fm-sheet-head">
       <h3 class="fm-sheet-title" id="fm-sheet-title">Detail</h3>
-      <button class="icon-btn" type="button" data-sheet-close aria-label="Tutup">✕</button>
+      <button class="icon-btn" type="button" data-sheet-close aria-label="Tutup"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </header>
     <div class="fm-sheet-body" id="fm-sheet-body"></div>
     <footer class="fm-sheet-foot" id="fm-sheet-foot"></footer>
