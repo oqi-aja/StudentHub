@@ -543,7 +543,7 @@ function showLoginPanel(root, which) {
 }
 
 function initLoginPage() {
-  const root = document.querySelector('.login');
+  const root = document.getElementById('app') || document.querySelector('.login'); if (!root) return;
   
   
 
