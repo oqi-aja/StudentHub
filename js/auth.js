@@ -270,15 +270,10 @@ async function loginSupabase(username, password, gate) {
 
 function loginAsGuest() {
   currentUser = guestSession();
-  if (!isSupabaseMode()) {
-    persistSessionMock();
-  } else {
-    // Supabase mode: tamu tidak ada di auth.users. Cukup clear local state.
+  persistSessionMock();
+  if (isSupabaseMode()) {
     try { localStorage.removeItem(PROFILE_CACHE_KEY); } catch (_) {}
-    // Optional: signOut dari Supabase kalau ada session lama
-    if (_supabaseClient) {
-      _supabaseClient.auth.signOut().catch(() => {});
-    }
+    if (_supabaseClient) { _supabaseClient.auth.signOut().catch(() => {}); }
   }
   return currentUser;
 }
