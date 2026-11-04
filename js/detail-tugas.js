@@ -144,7 +144,7 @@
 
     // Body
     const body = root.querySelector('[data-detail-body]');
-    const isMahasiswa = me && me.role === 'student';
+    const isMahasiswa = me && (me.role === 'student' || me.role === 'mahasiswa');
     const isPjOrAdmin = me && (me.role === 'admin' || me.role === 'pj');
     const canEdit = isPjOrAdmin && (me.role === 'admin' || String(me.course_id) === String(task.course_id));
 

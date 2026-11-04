@@ -58,7 +58,7 @@ function akunInitPage() {
     // dijaga canManageAccounts() di auth.js.
     const accounts = listAccountsWithSecrets();
     const pj = accounts.filter((a) => a.role === 'pj');
-    const mhs = accounts.filter((a) => a.role === 'student');
+    const mhs = accounts.filter((a) => a.role === 'student' || a.role === 'mahasiswa');
     root.querySelector('[data-total]').textContent = String(accounts.length);
     root.querySelector('[data-pj]').textContent = String(pj.length);
     root.querySelector('[data-mhs]').textContent = String(mhs.length);
@@ -101,7 +101,7 @@ function akunInitPage() {
       form.elements.username.value = row.username || '';
       form.elements.password.value = row.password || '';
       // Nilai role 'student' disimpan sebagai 'mahasiswa' di form.
-      roleSel.value = row.role === 'student' ? 'mahasiswa' : row.role;
+      roleSel.value = (row.role === 'student' || row.role === 'mahasiswa') ? 'mahasiswa' : row.role;
       courseSel.value = row.course_id ? String(row.course_id) : '';
     }
     syncCourse();

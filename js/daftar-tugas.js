@@ -248,7 +248,7 @@
       tasks = tasks.filter((t) => String(t.course_id) === String(courseFilter));
     }
 
-    if (me && me.role === 'student' && statusFilter) {
+    if (me && (me.role === 'student' || me.role === 'mahasiswa') && statusFilter) {
       tasks = tasks.filter((t) => {
         const st = getTaskStatusForStudent(t, me.id);
         return st.state === statusFilter;
@@ -296,7 +296,7 @@
 
     const me = getCurrentUser();
     const canManage = me && (me.role === 'admin' || me.role === 'pj');
-    const isMahasiswa = me && me.role === 'student';
+    const isMahasiswa = me && (me.role === 'student' || me.role === 'mahasiswa');
 
     // Toggle visibility tombol "+ Tambah" + "Status Mahasiswa"
     const addBtn = root.querySelector('[data-open]');
@@ -355,7 +355,7 @@
 
   function renderTaskCard(t, me) {
     const course = courseName(t.course_id);
-    const isMahasiswa = me && me.role === 'student';
+    const isMahasiswa = me && (me.role === 'student' || me.role === 'mahasiswa');
     const canEdit = me && (me.role === 'admin' || (me.role === 'pj' && String(me.course_id) === String(t.course_id)));
     const isPjOrAdmin = me && (me.role === 'admin' || me.role === 'pj');
 
