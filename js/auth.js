@@ -544,7 +544,7 @@ function showLoginPanel(root, which) {
 
 function initLoginPage() {
   const root = document.querySelector('.login');
-  if (!root || root.dataset.ready === '1') return;
+  
   
 
   root.querySelectorAll('[data-enter]').forEach((btn) => {
