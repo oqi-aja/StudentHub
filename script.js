@@ -187,7 +187,7 @@ async function shCheckAndNotify() {
     if (urgentTasks.length > 0) {
       const task = urgentTasks[0];
       const countMore = urgentTasks.length - 1;
-      const title = 'Pengingat Deadline Tugas!';
+      const title = '⏰ Pengingat Deadline Tugas!';
       const body = `Tugas "${task.title}" mendekati batas waktu.`
         + (countMore > 0 ? ` (+${countMore} tugas lain)` : '');
       new Notification(title, {

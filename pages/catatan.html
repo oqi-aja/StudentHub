@@ -1,11 +1,9 @@
 <section class="page-section" id="page-catatan">
   <div class="catatan-shell" data-shell data-mode="grid" data-view="catatan" data-layout="grid">
     <header class="catatan-header">
-      <button class="icon-btn catatan-hamburger" type="button" data-sidebar-toggle aria-label="Menu" title="Menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
-      </button>
+      <button class="icon-btn catatan-hamburger" type="button" data-sidebar-toggle aria-label="Menu" title="Menu">☰</button>
       <div class="catatan-header-brand">
-        <span class="catatan-brand-text"><span class="catatan-brand-prefix">StudentHub / </span>Catatan</span>
+        <span class="catatan-brand-text">StudentHub / Catatan</span>
       </div>
       <div class="catatan-search-wrap">
         <input class="input catatan-search" type="search" data-search placeholder="Telusuri catatan..." aria-label="Telusuri catatan">
@@ -17,15 +15,9 @@
           <option value="title_asc">Nama A-Z</option>
           <option value="title_desc">Nama Z-A</option>
         </select>
-        <button class="icon-btn" type="button" data-action="refresh" aria-label="Segarkan" title="Segarkan">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
-        </button>
-        <button class="icon-btn" type="button" data-action="toggle-view" aria-label="Tampilan" title="Ganti tampilan">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        </button>
-        <button class="icon-btn" type="button" data-quick-new aria-label="Catatan baru" title="Catatan baru">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-        </button>
+        <button class="icon-btn" type="button" data-action="refresh" aria-label="Segarkan" title="Segarkan">⟳</button>
+        <button class="icon-btn" type="button" data-action="toggle-view" aria-label="Tampilan" title="Ganti tampilan">▦</button>
+        <button class="icon-btn" type="button" data-quick-new aria-label="Catatan baru" title="Catatan baru">＋</button>
       </div>
     </header>
 
@@ -33,34 +25,24 @@
       <aside class="catatan-sidebar" data-sidebar>
         <nav class="catatan-sidebar-nav">
           <button class="catatan-nav-item is-active" type="button" data-nav="catatan" aria-current="page">
-            <span class="catatan-nav-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
-            </span>
+            <span class="catatan-nav-ico">💡</span>
             <span class="catatan-nav-text">Catatan</span>
           </button>
           <button class="catatan-nav-item" type="button" data-nav="pengingat">
-            <span class="catatan-nav-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-            </span>
+            <span class="catatan-nav-ico">🔔</span>
             <span class="catatan-nav-text">Pengingat</span>
           </button>
           <button class="catatan-nav-item" type="button" data-nav="label-manage">
-            <span class="catatan-nav-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
-            </span>
+            <span class="catatan-nav-ico">🏷️</span>
             <span class="catatan-nav-text">Edit label</span>
           </button>
           <div class="catatan-nav-labels" data-sidebar-labels-list></div>
           <button class="catatan-nav-item" type="button" data-nav="arsip">
-            <span class="catatan-nav-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-            </span>
+            <span class="catatan-nav-ico">📥</span>
             <span class="catatan-nav-text">Arsip</span>
           </button>
           <button class="catatan-nav-item" type="button" data-nav="sampah">
-            <span class="catatan-nav-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            </span>
+            <span class="catatan-nav-ico">🗑️</span>
             <span class="catatan-nav-text">Sampah</span>
           </button>
         </nav>
@@ -74,18 +56,14 @@
             <div class="quick-note-collapsed" data-quick-collapsed>
               <input class="quick-note-input" type="text" data-quick-placeholder readonly placeholder="Buat catatan...">
               <div class="quick-note-actions">
-                <button class="icon-btn" type="button" data-quick-photo-btn aria-label="Tambah foto" title="Tambah foto">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.35-4.35a1 1 0 0 0-1.42 0L7 19"/></svg>
-                </button>
+                <button class="icon-btn" type="button" data-quick-photo-btn aria-label="Tambah foto">🖼️</button>
                 <input class="hidden-input" type="file" data-quick-file accept="image/*" hidden>
               </div>
             </div>
             <div class="quick-note-expanded" data-quick-expanded hidden>
               <div class="quick-title-row">
                 <input class="note-title quick-note-title" type="text" data-quick-title placeholder="Judul" maxlength="120">
-                <button class="icon-btn" type="button" data-quick-pin aria-label="Sematkan" title="Sematkan">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                </button>
+                <button class="icon-btn" type="button" data-quick-pin aria-label="Sematkan">📌</button>
               </div>
               <textarea class="note-content quick-note-content" data-quick-content placeholder="Buat catatan..."></textarea>
               <div class="quick-chips" data-quick-chips hidden></div>
@@ -102,17 +80,13 @@
           </div>
 
           <div class="catatan-error-state" data-error-state hidden>
-            <span class="catatan-error-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-            </span>
+            <span class="catatan-error-icon">⚠️</span>
             <p class="catatan-error-text" data-error-state-text>Gagal memuat catatan.</p>
             <button class="button button--ghost button--sm" type="button" data-action="retry">Coba lagi</button>
           </div>
 
           <div class="catatan-empty" data-empty hidden>
-            <div class="catatan-empty-icon" data-empty-icon>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
-            </div>
+            <div class="catatan-empty-icon" data-empty-icon>💡</div>
             <div class="catatan-empty-title" data-empty-title>Belum ada catatan</div>
             <div class="catatan-empty-sub" data-empty-sub>Catatan yang Anda buat akan muncul di sini.</div>
           </div>
@@ -134,9 +108,7 @@
           <div class="note-editor-dialog">
             <header class="note-editor-header">
               <input class="note-title" type="text" data-note-title placeholder="Judul" maxlength="120" aria-label="Judul catatan">
-              <button class="icon-btn" type="button" data-editor-pin title="Sematkan" aria-label="Sematkan catatan">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-              </button>
+              <button class="icon-btn" type="button" data-editor-pin title="Sematkan" aria-label="Sematkan catatan">📌</button>
             </header>
             <div class="note-editor-body">
               <img class="catatan-img" data-note-image alt="Foto catatan" hidden>
@@ -156,35 +128,17 @@
                     <button class="catatan-menu-item" type="button" data-format="clear">Hapus format</button>
                   </div>
                 </div>
-                <button class="icon-btn" type="button" data-action="color-popover" title="Warna" aria-label="Warna">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-action="reminder-popover" title="Pengingat" aria-label="Pengingat">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-editor-collaborator title="Kolaborator" aria-label="Kolaborator">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-note-photo title="Tambah foto" aria-label="Tambah foto">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.35-4.35a1 1 0 0 0-1.42 0L7 19"/></svg>
-                </button>
+                <button class="icon-btn" type="button" data-action="color-popover" title="Warna" aria-label="Warna">🎨</button>
+                <button class="icon-btn" type="button" data-action="reminder-popover" title="Pengingat" aria-label="Pengingat">🔔</button>
+                <button class="icon-btn" type="button" data-editor-collaborator title="Kolaborator" aria-label="Kolaborator">👤</button>
+                <button class="icon-btn" type="button" data-note-photo title="Tambah foto" aria-label="Tambah foto">🖼️</button>
                 <input type="file" data-note-file accept="image/*" hidden>
-                <button class="icon-btn" type="button" data-note-remove-photo title="Hapus foto" aria-label="Hapus foto" hidden>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-editor-archive title="Arsipkan" aria-label="Arsipkan">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-editor-restore title="Pulihkan" aria-label="Pulihkan" hidden>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-editor-delete title="Hapus permanen" aria-label="Hapus permanen" hidden>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                </button>
+                <button class="icon-btn" type="button" data-note-remove-photo title="Hapus foto" aria-label="Hapus foto" hidden>🚫</button>
+                <button class="icon-btn" type="button" data-editor-archive title="Arsipkan" aria-label="Arsipkan">📦</button>
+                <button class="icon-btn" type="button" data-editor-restore title="Pulihkan" aria-label="Pulihkan" hidden>♻️</button>
+                <button class="icon-btn" type="button" data-editor-delete title="Hapus permanen" aria-label="Hapus permanen" hidden>🗑️</button>
                 <div class="catatan-menu-wrap">
-                  <button class="icon-btn" type="button" data-note-menu-btn title="Lainnya" aria-label="Lainnya">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
-                  </button>
+                  <button class="icon-btn" type="button" data-note-menu-btn title="Lainnya" aria-label="Lainnya">⋮</button>
                   <div class="catatan-menu catatan-menu--up" data-note-menu hidden>
                     <button class="catatan-menu-item" type="button" data-action="label-popover" data-target="editor">Label</button>
                     <button class="catatan-menu-item" type="button" data-action="duplicate" data-note-action>Duplikasi</button>
@@ -194,12 +148,8 @@
                 </div>
               </div>
               <div class="note-toolbar-group">
-                <button class="icon-btn" type="button" data-editor-undo title="Urungkan (Ctrl+Z)" aria-label="Urungkan" disabled>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
-                </button>
-                <button class="icon-btn" type="button" data-editor-redo title="Ulangi (Ctrl+Shift+Z)" aria-label="Ulangi" disabled>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
-                </button>
+                <button class="icon-btn" type="button" data-editor-undo title="Urungkan (Ctrl+Z)" aria-label="Urungkan" disabled>↶</button>
+                <button class="icon-btn" type="button" data-editor-redo title="Ulangi (Ctrl+Shift+Z)" aria-label="Ulangi" disabled>↷</button>
               </div>
             </div>
             <footer class="note-editor-footer">
@@ -232,9 +182,7 @@
     <div class="popover-label-list" data-popover-label-list></div>
     <div class="popover-input-row">
       <input class="input input--sm" type="text" data-popover-new-label placeholder="Buat label baru...">
-      <button class="button button--ghost button--sm" type="button" data-popover-add-label aria-label="Tambah label">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-      </button>
+      <button class="button button--ghost button--sm" type="button" data-popover-add-label>+</button>
     </div>
   </div>
 
@@ -253,9 +201,7 @@
   <section class="fm-sheet" data-label-sheet role="dialog" aria-modal="true" aria-labelledby="catatan-label-title" hidden>
     <header class="fm-sheet-head">
       <h3 class="fm-sheet-title" id="catatan-label-title">Edit Label</h3>
-      <button class="icon-btn" type="button" data-close aria-label="Tutup">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
     </header>
     <div class="fm-sheet-body">
       <div class="popover-input-row">
@@ -272,9 +218,7 @@
   <section class="fm-sheet" data-delete-sheet role="dialog" aria-modal="true" aria-labelledby="catatan-delete-title" hidden>
     <header class="fm-sheet-head">
       <h3 class="fm-sheet-title" id="catatan-delete-title">Hapus Catatan</h3>
-      <button class="icon-btn" type="button" data-close aria-label="Tutup">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
     </header>
     <div class="fm-sheet-body">
       <p class="card-meta">Catatan <strong data-delete-text></strong> akan dihapus permanen dan tidak bisa dikembalikan.</p>
@@ -288,9 +232,7 @@
   <section class="fm-sheet" data-collaborator-sheet role="dialog" aria-modal="true" aria-labelledby="catatan-collab-title" hidden>
     <header class="fm-sheet-head">
       <h3 class="fm-sheet-title" id="catatan-collab-title">Kolaborator</h3>
-      <button class="icon-btn" type="button" data-close aria-label="Tutup">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button class="icon-btn" type="button" data-close aria-label="Tutup">✕</button>
     </header>
     <div class="fm-sheet-body">
       <p class="card-meta">Berbagi belum tersambung ke backend — daftar ini hanya tersimpan di perangkat ini.</p>

@@ -39,35 +39,18 @@ function fmFormatSize(bytes) {
 }
 
 function fmIcon(item) {
-  if (item.type === 'folder') {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>';
-  }
-  if (item.type === 'task') {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
-  }
+  if (item.type === 'folder') return '📁';
+  if (item.type === 'task') return '📌';
   const ext = (item.name.split('.').pop() || '').toLowerCase();
-  if (['zip', 'rar', '7z'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>';
-  }
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
-  }
-  if (['doc', 'docx', 'odt'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>';
-  }
-  if (['xls', 'xlsx', 'csv'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>';
-  }
-  if (['ppt', 'pptx'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>';
-  }
-  if (['mp3', 'wav'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>';
-  }
-  if (['mp4', 'mkv', 'mov'].includes(ext)) {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>';
-  }
-  return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>';
+  if (['zip', 'rar', '7z'].includes(ext)) return '📦';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '🖼️';
+  if (['doc', 'docx', 'odt'].includes(ext)) return '📝';
+  if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
+  if (['ppt', 'pptx'].includes(ext)) return '📽️';
+  if (['mp3', 'wav'].includes(ext)) return '🎵';
+  if (['mp4', 'mkv', 'mov'].includes(ext)) return '🎬';
+  if (['txt', 'md'].includes(ext)) return '📃';
+  return '📄';
 }
 
 // ---------- Pohon folder ----------
@@ -157,7 +140,7 @@ function fmItemHtml(item) {
         </span>
         ${item.type === 'task' ? '<span class="badge badge--warning">Tugas</span>' : ''}
       </button>
-      <button class="fm-item-more" type="button" data-more="${item.id}" aria-label="Menu untuk ${fmEscape(item.name)}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button>
+      <button class="fm-item-more" type="button" data-more="${item.id}" aria-label="Menu untuk ${fmEscape(item.name)}">⋮</button>
     </div>`;
 }
 
@@ -264,8 +247,8 @@ function fmOpenMenu(item) {
 
 function fmOpenAdd() {
   const rows = [];
-  if (can('create-folder', null)) rows.push('<button class="fm-menu-item" type="button" data-action="create-folder">Buat folder baru</button>');
-  if (can('upload', null)) rows.push('<button class="fm-menu-item" type="button" data-action="upload">Upload file</button>');
+  if (can('create-folder', null)) rows.push('<button class="fm-menu-item" type="button" data-action="create-folder">📁 Buat folder baru</button>');
+  if (can('upload', null)) rows.push('<button class="fm-menu-item" type="button" data-action="upload">📄 Upload file</button>');
   if (!rows.length) rows.push('<p class="fm-hint">Tidak ada aksi yang tersedia untuk role ini.</p>');
   fmOpenSheet(null, 'Tambah', rows.join(''), '<p class="fm-hint">Semua perubahan hanya ada di memori browser dan hilang saat refresh.</p>');
 }
@@ -407,7 +390,7 @@ async function fmAddFile(file) {
       const result = await window.SH_API.detectSubmissionOnUpload(newFile);
       if (result && result.task) {
         fmRender();
-        fmToast(`Tugas "${result.task.title}" berhasil dikumpulkan! Status: SUDAH DIKUMPULKAN.`);
+        fmToast(`✓ Tugas "${result.task.title}" berhasil dikumpulkan! Status: SUDAH DIKUMPULKAN.`);
         return;
       }
     } catch (e) {

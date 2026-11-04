@@ -270,10 +270,15 @@ async function loginSupabase(username, password, gate) {
 
 function loginAsGuest() {
   currentUser = guestSession();
-  persistSessionMock();
-  if (isSupabaseMode()) {
+  if (!isSupabaseMode()) {
+    persistSessionMock();
+  } else {
+    // Supabase mode: tamu tidak ada di auth.users. Cukup clear local state.
     try { localStorage.removeItem(PROFILE_CACHE_KEY); } catch (_) {}
-    if (_supabaseClient) { _supabaseClient.auth.signOut().catch(() => {}); }
+    // Optional: signOut dari Supabase kalau ada session lama
+    if (_supabaseClient) {
+      _supabaseClient.auth.signOut().catch(() => {});
+    }
   }
   return currentUser;
 }
@@ -380,7 +385,7 @@ function createAccount(input) {
     ? ' (mock only — belum terdaftar di Supabase Auth)'
     : '';
   return { ok: true, account: { ...account, password: undefined },
-    message: `Akun ${account.name} berhasil dibuat sebagai ${ROLE_LABELS[account.role]}.${note}` };
+    message: `✓ Akun ${account.name} berhasil dibuat sebagai ${ROLE_LABELS[account.role]}.${note}` };
 }
 
 function updateAccount(id, input) {
@@ -395,7 +400,7 @@ function updateAccount(id, input) {
   const account = { id, ...v.account };
   MOCK_ACCOUNTS[index] = account;
   persistAccounts();
-  return { ok: true, account: { ...account, password: undefined }, message: `Akun ${account.name} berhasil diperbarui.` };
+  return { ok: true, account: { ...account, password: undefined }, message: `✓ Akun ${account.name} berhasil diperbarui.` };
 }
 
 function deleteAccount(id) {
@@ -405,7 +410,7 @@ function deleteAccount(id) {
   if (currentUser && currentUser.id === id) return { ok: false, error: 'Akun yang sedang dipakai tidak bisa dihapus dari sini.' };
   const [removed] = MOCK_ACCOUNTS.splice(index, 1);
   persistAccounts();
-  return { ok: true, message: `Akun ${removed.name} (${removed.username}) berhasil dihapus.` };
+  return { ok: true, message: `✓ Akun ${removed.name} (${removed.username}) berhasil dihapus.` };
 }
 
 // ---------- Public sync getters ----------
@@ -543,9 +548,9 @@ function showLoginPanel(root, which) {
 }
 
 function initLoginPage() {
-  const root = document.getElementById('app') || document.querySelector('.login'); if (!root) return;
-  
-  
+  const root = document.querySelector('.login');
+  if (!root || root.dataset.ready === '1') return;
+  root.dataset.ready = '1';
 
   root.querySelectorAll('[data-enter]').forEach((btn) => {
     btn.addEventListener('click', () => showLoginPanel(root, btn.dataset.enter));

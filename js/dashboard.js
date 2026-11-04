@@ -43,7 +43,7 @@ function dashDeadlineNote(deadline) {
   if (days === null) return 'Tanpa deadline';
   if (days < 0) return 'Terlambat ' + Math.abs(days) + ' hari';
   if (days === 0) return 'Deadline hari ini';
-  return days + ' hari lagi';
+  return '⏰ ' + days + ' hari lagi';
 }
 
 function dashBadgeClass(deadline) {
@@ -220,7 +220,7 @@ function dashRender(root, data) {
       } else if (totalT === 0) {
         metaEl.textContent = 'Belum ada tugas aktif';
       } else {
-        metaEl.textContent = 'Semua tugas telah selesai dikumpulkan.';
+        metaEl.textContent = 'Hebat! Semua tugas telah selesai dikumpulkan ✓';
       }
     }
   }
@@ -291,7 +291,7 @@ function dashRender(root, data) {
         // Cek apakah mahasiswa yang login sudah submit tugas ini
         const isDone = isStudent && mySubmissions.some((s) => String(s.task_id) === String(t.id));
         const badgeMarkup = isDone
-          ? '<span class="badge badge--success"><span class="status-dot status-dot--success"></span>Diserahkan</span>'
+          ? '<span class="badge badge--success">✓ Diserahkan</span>'
           : '<span class="' + dashBadgeClass(t.deadline) + '">' + dashEscape(dashDeadlineNote(t.deadline)) + '</span>';
 
         return '<a class="list-item" href="#detail-tugas?id=' + dashEscape(t.id) + '">'

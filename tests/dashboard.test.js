@@ -39,7 +39,7 @@ assert.strictEqual(dash.dashDaysLeft(""), null, "tanpa deadline = null");
 assert.strictEqual(dash.dashDaysLeft("ngawur"), null, "tanggal rusak tidak crash");
 
 assert.strictEqual(dash.dashDeadlineNote(iso(0)), "Deadline hari ini");
-assert.strictEqual(dash.dashDeadlineNote(iso(7)), "7 hari lagi");
+assert.strictEqual(dash.dashDeadlineNote(iso(7)), "\u23f0 7 hari lagi");
 assert.strictEqual(dash.dashDeadlineNote(iso(-2)), "Terlambat 2 hari");
 assert.strictEqual(dash.dashDeadlineNote(""), "Tanpa deadline");
 
