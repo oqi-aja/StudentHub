@@ -303,32 +303,32 @@ function stripFormat(input) {
 
 const EMPTY_STATES = {
   catatan: {
-    icon: '💡',
+    icon: '',
     title: 'Belum ada catatan',
     subtitle: 'Mulai dengan membuat catatan pertama Anda'
   },
   tersemat: {
-    icon: '📌',
+    icon: '',
     title: 'Tidak ada catatan yang disematkan',
     subtitle: 'Sematkan catatan penting agar mudah ditemukan'
   },
   pengingat: {
-    icon: '🔔',
+    icon: '',
     title: 'Tidak ada pengingat aktif',
     subtitle: 'Atur pengingat pada catatan untuk melihatnya di sini'
   },
   label: {
-    icon: '🏷️',
+    icon: '️',
     title: 'Tidak ada catatan dengan label ini',
     subtitle: 'Tambahkan label ke catatan untuk mengelompokkannya'
   },
   arsip: {
-    icon: '📥',
+    icon: '',
     title: 'Arsip kosong',
     subtitle: 'Catatan yang diarsipkan akan muncul di sini'
   },
   sampah: {
-    icon: '🗑️',
+    icon: '️',
     title: 'Sampah kosong',
     subtitle: 'Catatan yang dihapus akan masuk ke Sampah'
   }
@@ -457,7 +457,7 @@ function initCatatanPage() {
       b.type = 'button';
       b.className = 'catatan-nav-item';
       b.dataset.nav = 'label:' + lbl;
-      b.innerHTML = '<span class="catatan-nav-ico">🏷️</span><span class="catatan-nav-text">' + escapeHtml(lbl) + '</span>';
+      b.innerHTML = '<span class="catatan-nav-ico">️</span><span class="catatan-nav-text">' + escapeHtml(lbl) + '</span>';
       els.sidebarLabels.appendChild(b);
     });
   }
@@ -470,7 +470,7 @@ function initCatatanPage() {
     const safeImage = note.image && String(note.image).startsWith('data:image/') ? escapeHtml(note.image) : '';
     const trashed = Boolean(note.isDeleted);
     const chips = [];
-    if (note.reminder) chips.push('<span class="note-chip">🔔 ' + escapeHtml(formatReminderLabel(note.reminder)) + '</span>');
+    if (note.reminder) chips.push('<span class="note-chip"> ' + escapeHtml(formatReminderLabel(note.reminder)) + '</span>');
     (note.labels || []).slice(0, 3).forEach(function (lbl) { chips.push('<span class="note-chip">' + escapeHtml(lbl) + '</span>'); });
     const meta = trashed ? 'Di Sampah' : (note.isArchived ? 'Diarsipkan' : '');
     const menuItems = trashed
@@ -484,7 +484,7 @@ function initCatatanPage() {
       <div class="note-card-preview">${escapeHtml((note.content || '').substring(0, 160))}</div>
       ${chips.length ? `<div class="note-card-chips">${chips.join('')}</div>` : ''}
       <div class="note-card-meta">${meta}</div>
-      <button class="icon-btn note-card-actions" type="button" data-card-pin title="Sematkan" ${trashed ? 'hidden' : ''}>📌</button>
+      <button class="icon-btn note-card-actions" type="button" data-card-pin title="Sematkan" ${trashed ? 'hidden' : ''}></button>
       <div class="catatan-menu-wrap">
         <button class="icon-btn note-card-menu-btn" type="button" data-card-menu-btn title="Lainnya" aria-label="Lainnya">⋮</button>
         <div class="catatan-menu" data-card-menu hidden>${menuItems}</div>
@@ -729,9 +729,9 @@ function initCatatanPage() {
       span.textContent = text;
       els.editor.chips.appendChild(span);
     };
-    (note.labels || []).forEach(function (lbl) { add('🏷️ ' + lbl); });
-    if (note.reminder) add('🔔 ' + formatReminderLabel(note.reminder));
-    (note.collaborators || []).forEach(function (u) { add('👤 ' + u); });
+    (note.labels || []).forEach(function (lbl) { add('️ ' + lbl); });
+    if (note.reminder) add(' ' + formatReminderLabel(note.reminder));
+    (note.collaborators || []).forEach(function (u) { add(' ' + u); });
   }
 
   function openEditor(note) {

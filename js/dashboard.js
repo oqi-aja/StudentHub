@@ -43,7 +43,7 @@ function dashDeadlineNote(deadline) {
   if (days === null) return 'Tanpa deadline';
   if (days < 0) return 'Terlambat ' + Math.abs(days) + ' hari';
   if (days === 0) return 'Deadline hari ini';
-  return '⏰ ' + days + ' hari lagi';
+  return days + ' hari lagi';
 }
 
 function dashBadgeClass(deadline) {

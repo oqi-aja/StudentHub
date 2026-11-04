@@ -60,7 +60,7 @@ function initProfilPage() {
       if (notifBtn) notifBtn.disabled = true;
     } else {
       if (notifStatus) notifStatus.textContent = 'Klik untuk aktifkan pengingat.';
-      if (notifBtn) notifBtn.textContent = '🔔 Aktifkan';
+      if (notifBtn) notifBtn.textContent = ' Aktifkan';
     }
   };
   updateNotifStatus();

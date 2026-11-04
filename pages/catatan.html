@@ -25,24 +25,24 @@
       <aside class="catatan-sidebar" data-sidebar>
         <nav class="catatan-sidebar-nav">
           <button class="catatan-nav-item is-active" type="button" data-nav="catatan" aria-current="page">
-            <span class="catatan-nav-ico">💡</span>
+            <span class="catatan-nav-ico"></span>
             <span class="catatan-nav-text">Catatan</span>
           </button>
           <button class="catatan-nav-item" type="button" data-nav="pengingat">
-            <span class="catatan-nav-ico">🔔</span>
+            <span class="catatan-nav-ico"></span>
             <span class="catatan-nav-text">Pengingat</span>
           </button>
           <button class="catatan-nav-item" type="button" data-nav="label-manage">
-            <span class="catatan-nav-ico">🏷️</span>
+            <span class="catatan-nav-ico">️</span>
             <span class="catatan-nav-text">Edit label</span>
           </button>
           <div class="catatan-nav-labels" data-sidebar-labels-list></div>
           <button class="catatan-nav-item" type="button" data-nav="arsip">
-            <span class="catatan-nav-ico">📥</span>
+            <span class="catatan-nav-ico"></span>
             <span class="catatan-nav-text">Arsip</span>
           </button>
           <button class="catatan-nav-item" type="button" data-nav="sampah">
-            <span class="catatan-nav-ico">🗑️</span>
+            <span class="catatan-nav-ico">️</span>
             <span class="catatan-nav-text">Sampah</span>
           </button>
         </nav>
@@ -56,14 +56,14 @@
             <div class="quick-note-collapsed" data-quick-collapsed>
               <input class="quick-note-input" type="text" data-quick-placeholder readonly placeholder="Buat catatan...">
               <div class="quick-note-actions">
-                <button class="icon-btn" type="button" data-quick-photo-btn aria-label="Tambah foto">🖼️</button>
+                <button class="icon-btn" type="button" data-quick-photo-btn aria-label="Tambah foto">️</button>
                 <input class="hidden-input" type="file" data-quick-file accept="image/*" hidden>
               </div>
             </div>
             <div class="quick-note-expanded" data-quick-expanded hidden>
               <div class="quick-title-row">
                 <input class="note-title quick-note-title" type="text" data-quick-title placeholder="Judul" maxlength="120">
-                <button class="icon-btn" type="button" data-quick-pin aria-label="Sematkan">📌</button>
+                <button class="icon-btn" type="button" data-quick-pin aria-label="Sematkan"></button>
               </div>
               <textarea class="note-content quick-note-content" data-quick-content placeholder="Buat catatan..."></textarea>
               <div class="quick-chips" data-quick-chips hidden></div>
@@ -80,13 +80,13 @@
           </div>
 
           <div class="catatan-error-state" data-error-state hidden>
-            <span class="catatan-error-icon">⚠️</span>
+            <span class="catatan-error-icon">️</span>
             <p class="catatan-error-text" data-error-state-text>Gagal memuat catatan.</p>
             <button class="button button--ghost button--sm" type="button" data-action="retry">Coba lagi</button>
           </div>
 
           <div class="catatan-empty" data-empty hidden>
-            <div class="catatan-empty-icon" data-empty-icon>💡</div>
+            <div class="catatan-empty-icon" data-empty-icon></div>
             <div class="catatan-empty-title" data-empty-title>Belum ada catatan</div>
             <div class="catatan-empty-sub" data-empty-sub>Catatan yang Anda buat akan muncul di sini.</div>
           </div>
@@ -108,7 +108,7 @@
           <div class="note-editor-dialog">
             <header class="note-editor-header">
               <input class="note-title" type="text" data-note-title placeholder="Judul" maxlength="120" aria-label="Judul catatan">
-              <button class="icon-btn" type="button" data-editor-pin title="Sematkan" aria-label="Sematkan catatan">📌</button>
+              <button class="icon-btn" type="button" data-editor-pin title="Sematkan" aria-label="Sematkan catatan"></button>
             </header>
             <div class="note-editor-body">
               <img class="catatan-img" data-note-image alt="Foto catatan" hidden>
@@ -128,15 +128,15 @@
                     <button class="catatan-menu-item" type="button" data-format="clear">Hapus format</button>
                   </div>
                 </div>
-                <button class="icon-btn" type="button" data-action="color-popover" title="Warna" aria-label="Warna">🎨</button>
-                <button class="icon-btn" type="button" data-action="reminder-popover" title="Pengingat" aria-label="Pengingat">🔔</button>
-                <button class="icon-btn" type="button" data-editor-collaborator title="Kolaborator" aria-label="Kolaborator">👤</button>
-                <button class="icon-btn" type="button" data-note-photo title="Tambah foto" aria-label="Tambah foto">🖼️</button>
+                <button class="icon-btn" type="button" data-action="color-popover" title="Warna" aria-label="Warna"></button>
+                <button class="icon-btn" type="button" data-action="reminder-popover" title="Pengingat" aria-label="Pengingat"></button>
+                <button class="icon-btn" type="button" data-editor-collaborator title="Kolaborator" aria-label="Kolaborator"></button>
+                <button class="icon-btn" type="button" data-note-photo title="Tambah foto" aria-label="Tambah foto">️</button>
                 <input type="file" data-note-file accept="image/*" hidden>
-                <button class="icon-btn" type="button" data-note-remove-photo title="Hapus foto" aria-label="Hapus foto" hidden>🚫</button>
-                <button class="icon-btn" type="button" data-editor-archive title="Arsipkan" aria-label="Arsipkan">📦</button>
-                <button class="icon-btn" type="button" data-editor-restore title="Pulihkan" aria-label="Pulihkan" hidden>♻️</button>
-                <button class="icon-btn" type="button" data-editor-delete title="Hapus permanen" aria-label="Hapus permanen" hidden>🗑️</button>
+                <button class="icon-btn" type="button" data-note-remove-photo title="Hapus foto" aria-label="Hapus foto" hidden></button>
+                <button class="icon-btn" type="button" data-editor-archive title="Arsipkan" aria-label="Arsipkan"></button>
+                <button class="icon-btn" type="button" data-editor-restore title="Pulihkan" aria-label="Pulihkan" hidden>️</button>
+                <button class="icon-btn" type="button" data-editor-delete title="Hapus permanen" aria-label="Hapus permanen" hidden>️</button>
                 <div class="catatan-menu-wrap">
                   <button class="icon-btn" type="button" data-note-menu-btn title="Lainnya" aria-label="Lainnya">⋮</button>
                   <div class="catatan-menu catatan-menu--up" data-note-menu hidden>

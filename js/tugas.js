@@ -39,18 +39,18 @@ function fmFormatSize(bytes) {
 }
 
 function fmIcon(item) {
-  if (item.type === 'folder') return '📁';
-  if (item.type === 'task') return '📌';
+  if (item.type === 'folder') return '';
+  if (item.type === 'task') return '';
   const ext = (item.name.split('.').pop() || '').toLowerCase();
-  if (['zip', 'rar', '7z'].includes(ext)) return '📦';
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '🖼️';
-  if (['doc', 'docx', 'odt'].includes(ext)) return '📝';
-  if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
-  if (['ppt', 'pptx'].includes(ext)) return '📽️';
-  if (['mp3', 'wav'].includes(ext)) return '🎵';
-  if (['mp4', 'mkv', 'mov'].includes(ext)) return '🎬';
-  if (['txt', 'md'].includes(ext)) return '📃';
-  return '📄';
+  if (['zip', 'rar', '7z'].includes(ext)) return '';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '️';
+  if (['doc', 'docx', 'odt'].includes(ext)) return '';
+  if (['xls', 'xlsx', 'csv'].includes(ext)) return '';
+  if (['ppt', 'pptx'].includes(ext)) return '️';
+  if (['mp3', 'wav'].includes(ext)) return '';
+  if (['mp4', 'mkv', 'mov'].includes(ext)) return '';
+  if (['txt', 'md'].includes(ext)) return '';
+  return '';
 }
 
 // ---------- Pohon folder ----------
@@ -247,8 +247,8 @@ function fmOpenMenu(item) {
 
 function fmOpenAdd() {
   const rows = [];
-  if (can('create-folder', null)) rows.push('<button class="fm-menu-item" type="button" data-action="create-folder">📁 Buat folder baru</button>');
-  if (can('upload', null)) rows.push('<button class="fm-menu-item" type="button" data-action="upload">📄 Upload file</button>');
+  if (can('create-folder', null)) rows.push('<button class="fm-menu-item" type="button" data-action="create-folder"> Buat folder baru</button>');
+  if (can('upload', null)) rows.push('<button class="fm-menu-item" type="button" data-action="upload"> Upload file</button>');
   if (!rows.length) rows.push('<p class="fm-hint">Tidak ada aksi yang tersedia untuk role ini.</p>');
   fmOpenSheet(null, 'Tambah', rows.join(''), '<p class="fm-hint">Semua perubahan hanya ada di memori browser dan hilang saat refresh.</p>');
 }

@@ -177,7 +177,7 @@ function renderJadwal() {
         // mahasiswa melihat daftar yang sama persis minus kontrolnya.
         + '<div class="jadwal-aksi" data-crud-bar' + (canManage ? '' : ' hidden') + '>'
         + '<button class="icon-btn" type="button" data-edit="' + Number(s.id) + '" aria-label="Ubah jadwal">✎</button>'
-        + '<button class="icon-btn" type="button" data-delete="' + Number(s.id) + '" aria-label="Hapus jadwal">🗑</button>'
+        + '<button class="icon-btn" type="button" data-delete="' + Number(s.id) + '" aria-label="Hapus jadwal"></button>'
         + '</div></div>';
     }).join('');
 
