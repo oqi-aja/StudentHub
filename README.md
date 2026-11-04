@@ -1,7 +1,7 @@
 # StudentHub
 
 Website manajemen tugas & informasi untuk siswa/mahasiswa.
-
+https://oqi-aja.github.io/StudentHub/
 ## Teknologi
 
 - **Frontend**: HTML + CSS + JavaScript vanilla (tanpa framework)
