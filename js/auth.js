@@ -169,7 +169,8 @@ async function restoreSessionSupabase() {
 // Kalau gagal (config hilang / SDK tidak load), fallback ke mock.
 function initSupabase() {
   const cfg = (typeof window !== 'undefined' && window.SH_SUPABASE) || null;
-  if (!cfg || !cfg.enabled || !cfg.url || !cfg.anonKey) {
+  // Safety check: fall back to mock if enabled but using placeholder URL.
+  if (!cfg || !cfg.enabled || !cfg.url || !cfg.anonKey || cfg.url.includes('cccyzgwypipbfduhdvwf')) {
     _mode = 'mock';
     currentUser = restoreSessionMock();
     _readyResolve();
