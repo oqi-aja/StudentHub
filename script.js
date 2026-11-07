@@ -42,8 +42,10 @@ async function loadPageContent(name) {
 function renderNav(activeKey) {
   const header = document.querySelector('.app-header');
   const nav = document.querySelector('.bottom-nav');
+  const backBtn = document.getElementById('sh-back-btn');
   const withChrome = activeKey !== 'login';
   if (header) header.hidden = !withChrome;
+  if (backBtn) backBtn.hidden = !withChrome || activeKey === 'home';
   if (!nav) return;
   nav.hidden = !withChrome;
   if (!withChrome) return;
@@ -215,6 +217,17 @@ async function init() {
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
       shToggleTheme();
+    });
+  }
+
+  const backBtn = document.getElementById('sh-back-btn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.hash = '#home';
+      }
     });
   }
 
